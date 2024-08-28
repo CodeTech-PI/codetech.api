@@ -2,6 +2,7 @@ package tech.code.codetech.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.time.LocalDate;
 
 @Getter
@@ -21,4 +22,8 @@ public class Product {
     private String categoria;
     private String unidadeDeMedida;
     private LocalDate dataDeValidade;
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 }
