@@ -62,9 +62,21 @@ public class AgendamentoController {
             return ResponseEntity.status(400).build();
         }
 
-        Agendamento agendamentoConcluido = agendamentoService.update(id, agendamentoAtualizado);
+        List<Agendamento> agendamentosExistentes = agendamentoService.findAll();
+        for (Agendamento agendamento : agendamentosExistentes) {
 
-        if (Objects.isNull(agendamentoConcluido)) {
+            boolean mesmoId = agendamento.getId().equals(id);
+            boolean existeAgendamentoNaData = agendamento.getData().equals(agendamentoAtualizado.getData());
+            boolean existeAgendamentoNaHora = agendamento.getHorario().equals(agendamentoAtualizado.getHorario());
+
+                if (!mesmoId && existeAgendamentoNaData && existeAgendamentoNaHora) {
+                    return ResponseEntity.status(409).build();
+                }
+            }
+
+            Agendamento agendamentoConcluido = agendamentoService.update(id, agendamentoAtualizado);
+
+            if (Objects.isNull(agendamentoConcluido)) {
             return ResponseEntity.status(404).build();
         }
 
