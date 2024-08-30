@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tech.code.codetech.model.Product;
 import tech.code.codetech.repository.ProductRepository;
-import tech.code.codetech.repository.ProdutoInterface;
+import tech.code.codetech.strategy.ProdutoInterface;
 
 import java.util.List;
 

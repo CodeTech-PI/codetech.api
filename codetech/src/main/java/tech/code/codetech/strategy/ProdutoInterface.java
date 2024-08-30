@@ -1,4 +1,4 @@
-package tech.code.codetech.repository;
+package tech.code.codetech.strategy;
 
 import tech.code.codetech.model.Product;
 
