@@ -7,11 +7,12 @@ import tech.code.codetech.model.Agendamento;
 import tech.code.codetech.model.Product;
 import tech.code.codetech.repository.AgendamentoRepository;
 import tech.code.codetech.repository.ProductRepository;
+import tech.code.codetech.strategy.AgendamentoInterface;
 
 import java.util.List;
 
 @Service
-public class AgendamentoService {
+public class AgendamentoService implements AgendamentoInterface {
 
     @Autowired
     private AgendamentoRepository agendamentoRepository;
