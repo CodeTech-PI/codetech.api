@@ -1,17 +1,17 @@
 package tech.code.codetech.strategy;
 
-import tech.code.codetech.model.Product;
+import tech.code.codetech.model.Produto;
 
 import java.util.List;
 
 public interface ProdutoInterface {
-    public Product save(Product produto);
+    public Produto save(Produto produto);
 
-    public List<Product> findAll();
+    public List<Produto> findAll();
 
-    public Product findById(Integer id);
+    public Produto findById(Integer id);
 
-    public Product update(Integer id, Product product);
+    public Produto update(Integer id, Produto product);
 
     public boolean delete(Integer id);
 }

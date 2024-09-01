@@ -4,22 +4,22 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import tech.code.codetech.model.Product;
-import tech.code.codetech.service.ProductService;
+import tech.code.codetech.model.Produto;
+import tech.code.codetech.service.ProdutoService;
 
 import java.util.List;
 import java.util.Objects;
 
 @RestController
 @RequestMapping("/produtos")
-public class ProductController {
+public class ProdutoController {
 
     @Autowired
-    private ProductService productService;
+    private ProdutoService productService;
 
     @GetMapping
-    public ResponseEntity<List<Product>> listar(){
-        List<Product> listProducts = productService.findAll();
+    public ResponseEntity<List<Produto>> listar(){
+        List<Produto> listProducts = productService.findAll();
 
         if(listProducts.isEmpty()){
             return ResponseEntity.status(204).build();
@@ -28,8 +28,8 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> encontrarPorId(@PathVariable Integer id){
-        Product produtoEncontrado = productService.findById(id);
+    public ResponseEntity<Produto> encontrarPorId(@PathVariable Integer id){
+        Produto produtoEncontrado = productService.findById(id);
 
         if(Objects.isNull(produtoEncontrado)){
             return ResponseEntity.status(404).build();
@@ -39,16 +39,16 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Product> post(@RequestBody @Valid Product product){
+    public ResponseEntity<Produto> post(@RequestBody @Valid Produto product){
         if(Objects.isNull(product)){
             return ResponseEntity.status(400).build();
         }
-        Product productSaved = productService.save(product);
+        Produto productSaved = productService.save(product);
         return ResponseEntity.status(201).body(productSaved);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Product> atualizar(@PathVariable Integer id, @RequestBody @Valid Product produtoAtualizado){
+    public ResponseEntity<Produto> atualizar(@PathVariable Integer id, @RequestBody @Valid Produto produtoAtualizado){
 
         if(Objects.isNull(id) || id <= 0){
             return ResponseEntity.status(404).build();
@@ -56,7 +56,7 @@ public class ProductController {
             return ResponseEntity.status(400).build();
         }
 
-        Product productExists = productService.update(id, produtoAtualizado);
+        Produto productExists = productService.update(id, produtoAtualizado);
 
         if(Objects.isNull(productExists)){
             return ResponseEntity.status(404).build();

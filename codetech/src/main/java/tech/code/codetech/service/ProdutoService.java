@@ -3,32 +3,32 @@ package tech.code.codetech.service;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import tech.code.codetech.model.Product;
-import tech.code.codetech.repository.ProductRepository;
+import tech.code.codetech.model.Produto;
+import tech.code.codetech.repository.ProdutoRepository;
 import tech.code.codetech.strategy.ProdutoInterface;
 
 import java.util.List;
 
 @Service
-public class ProductService implements ProdutoInterface {
+public class ProdutoService implements ProdutoInterface {
 
     @Autowired
-    private ProductRepository productRepository;
+    private ProdutoRepository productRepository;
 
     @Transactional // Garante integridade dos dados (rollback)
-    public Product save(Product produto){
+    public Produto save(Produto produto){
         return productRepository.save(produto);
     }
 
-    public List<Product> findAll(){ // Encontra tudo
+    public List<Produto> findAll(){ // Encontra tudo
         return productRepository.findAll();
     }
 
-    public Product findById(Integer id){
+    public Produto findById(Integer id){
         return productRepository.findById(id).orElse(null);
     }
 
-    public Product update(Integer id, Product product){
+    public Produto update(Integer id, Produto product){
         if(!productRepository.existsById(id)){
            return null;
         }

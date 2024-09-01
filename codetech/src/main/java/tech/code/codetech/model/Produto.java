@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Product{
+public class Produto {
     //Entity do Banco de dados
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

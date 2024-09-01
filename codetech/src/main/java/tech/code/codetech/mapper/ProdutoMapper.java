@@ -1,4 +1,4 @@
 package tech.code.codetech.mapper;
 
-public class ProductMapper {
+public class ProdutoMapper {
 }
