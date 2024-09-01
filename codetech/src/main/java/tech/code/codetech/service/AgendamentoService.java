@@ -5,11 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tech.code.codetech.model.Agendamento;
 import tech.code.codetech.repository.AgendamentoRepository;
+import tech.code.codetech.strategy.AgendamentoInterface;
 
 import java.util.List;
 
 @Service
-public class AgendamentoService {
+public class AgendamentoService implements AgendamentoInterface {
 
     @Autowired
     private AgendamentoRepository agendamentoRepository;
