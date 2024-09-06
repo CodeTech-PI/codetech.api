@@ -26,6 +26,7 @@ public class UsuarioLombardiService implements UsuarioLombardiInterface {
         return usuarioLombardiRepository.save(usuarioLombardi);
     }
 
+    @Transactional
     public boolean delete(Integer id){
         if(!usuarioLombardiRepository.existsById(id)){
             return false;
