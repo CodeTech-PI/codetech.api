@@ -4,11 +4,8 @@ import tech.code.codetech.model.UsuarioLombardi;
 
 public interface UsuarioLombardiInterface {
 
-    public UsuarioLombardi save(UsuarioLombardi usuarioLombardi);
-    public UsuarioLombardi update(Integer id, UsuarioLombardi usuarioLombardi);
-    public boolean delete(Integer id);
-    public UsuarioLombardi findById(Integer id);
-
-
-
+    UsuarioLombardi save(UsuarioLombardi usuarioLombardi);
+    UsuarioLombardi update(Integer id, UsuarioLombardi usuarioLombardi);
+    boolean delete(Integer id);
+    UsuarioLombardi findById(Integer id);
 }

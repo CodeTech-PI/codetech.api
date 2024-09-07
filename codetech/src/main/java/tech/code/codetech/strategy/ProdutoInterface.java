@@ -5,13 +5,13 @@ import tech.code.codetech.model.Produto;
 import java.util.List;
 
 public interface ProdutoInterface {
-    public Produto save(Produto produto);
+    Produto save(Produto produto);
 
-    public List<Produto> findAll();
+    List<Produto> findAll();
 
-    public Produto findById(Integer id);
+    Produto findById(Integer id);
 
-    public Produto update(Integer id, Produto product);
+    Produto update(Integer id, Produto product);
 
-    public boolean delete(Integer id);
+    boolean delete(Integer id);
 }
