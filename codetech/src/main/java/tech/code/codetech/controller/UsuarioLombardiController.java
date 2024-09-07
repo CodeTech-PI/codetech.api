@@ -26,12 +26,19 @@ public class UsuarioLombardiController {
     }
 
     @PostMapping
-    public ResponseEntity<UsuarioLombardi> post(@RequestBody @Valid UsuarioLombardi usuarioLombardi){
-        if(Objects.isNull(usuarioLombardi)){
-            return ResponseEntity.status(400).build();
+    public ResponseEntity<UsuarioLombardi> save(@RequestBody @Valid UsuarioLombardi usuarioLombardi){
+         usuarioLombardi.setId(null);
+        return ResponseEntity.status(201).body(usuarioLombardiService.save(usuarioLombardi));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<UsuarioLombardi> post(@RequestBody @Valid UsuarioLombardi usuarioLombardi) {
+       UsuarioLombardi usuario = usuarioLombardiService.findByEmailAndSenha(usuarioLombardi.getEmail(), usuarioLombardi.getSenha());
+
+        if (usuario == null) {
+            return ResponseEntity.status(404).build();
         }
-        UsuarioLombardi userSaved = usuarioLombardiService.save(usuarioLombardi);
-        return ResponseEntity.status(201).body(userSaved);
+            return ResponseEntity.status(200).body(usuario);
     }
 
     @PutMapping("/{id}")
@@ -64,5 +71,4 @@ public class UsuarioLombardiController {
         }
         return ResponseEntity.status(204).build();
     }
-
 }

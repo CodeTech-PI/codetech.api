@@ -38,4 +38,8 @@ public class UsuarioLombardiService implements UsuarioLombardiInterface {
     public UsuarioLombardi findById(Integer id){
         return usuarioLombardiRepository.findById(id).orElse(null);
     }
+
+    public UsuarioLombardi findByEmailAndSenha(String email, String password){
+        return usuarioLombardiRepository.findByEmailAndSenha(email, password);
+    }
 }

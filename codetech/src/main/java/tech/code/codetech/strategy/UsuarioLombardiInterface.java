@@ -9,4 +9,6 @@ public interface UsuarioLombardiInterface {
     public boolean delete(Integer id);
     public UsuarioLombardi findById(Integer id);
 
+
+
 }
