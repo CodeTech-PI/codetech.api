@@ -4,8 +4,11 @@ import tech.code.codetech.model.Produto;
 
 import java.util.List;
 
-public interface ProdutoInterface {
+public interface ProdutoInterface extends Ordenavel {
     Produto save(Produto produto);
+
+    @Override
+    <E extends Comparable<E>> List<E> ordenar(List<E> lista);
 
     List<Produto> findAll();
 
