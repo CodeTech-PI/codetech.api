@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Produto {
+public class Produto implements Comparable<Produto> {
     //Entity do Banco de dados
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,4 +21,10 @@ public class Produto {
     private String categoria;
     private String unidadeDeMedida;
     private LocalDate dataDeValidade;
+
+    @Override
+    public int compareTo(Produto o) {
+        return this.quantidade.compareTo(o.getQuantidade());
+    }
 }
+
