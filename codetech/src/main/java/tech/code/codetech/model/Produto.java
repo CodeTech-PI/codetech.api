@@ -21,6 +21,7 @@ public class Produto implements Comparable<Produto> {
     private String categoria;
     private String unidadeDeMedida;
     private LocalDate dataDeValidade;
+    private Double preco;
 
     @Override
     public int compareTo(Produto o) {
