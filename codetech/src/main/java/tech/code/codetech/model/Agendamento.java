@@ -19,12 +19,9 @@ public class Agendamento {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Integer id;
-    private String nomeCliente;
-    private String cpfCliente;
-    private LocalDate data;
-    private LocalTime horario;
-    private double valorCobrado;
-    private boolean cancelado = false;
+    private Boolean cancelado = false;
+    private LocalDate dataHora;
+    //fkCliente
+
 }
