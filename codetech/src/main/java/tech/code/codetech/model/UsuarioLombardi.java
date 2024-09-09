@@ -26,4 +26,8 @@ public class UsuarioLombardi {
     @NotBlank
     @Size(max = 25)
     private String senha;
+
+    @NotBlank
+    @Size(max = 100)
+    private String nome;
 }
