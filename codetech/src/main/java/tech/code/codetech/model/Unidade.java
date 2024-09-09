@@ -16,6 +16,7 @@ public class Unidade {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
     private String cep;
     private String logradouro;
     private String bairro;
