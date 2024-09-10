@@ -125,7 +125,8 @@ public class GoogleApiController {
                     start2 = events.get(j + 1).getStart().getDate();
                 }
 
-                if (start1.getValue() > start2.getValue()) {
+                // Alterar a comparação para ordenar em ordem decrescente
+                if (start1.getValue() < start2.getValue()) {
                     Event temp = events.get(j);
                     events.set(j, events.get(j + 1));
                     events.set(j + 1, temp);
@@ -133,4 +134,5 @@ public class GoogleApiController {
             }
         }
     }
+
 }
