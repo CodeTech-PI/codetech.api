@@ -6,21 +6,23 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.*;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Agendamento {
+public class Unidade {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private LocalDate data;
-    private LocalTime horario;
-    private boolean cancelado = false;
+    private String cep;
+    private String logradouro;
+    private String bairro;
+    private String cidade;
+    private String estado;
+    private String complemento;
+    private Integer numero;
+
 }
