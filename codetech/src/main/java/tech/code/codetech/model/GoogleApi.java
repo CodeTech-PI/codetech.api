@@ -1,5 +1,8 @@
 package tech.code.codetech.model;
 
+import com.google.api.client.util.DateTime;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class GoogleApi {
@@ -7,14 +10,8 @@ public class GoogleApi {
     private String summary;
     private String location;
     private String description;
-    private String startDateTime;
-    private String endDateTime;
-    private String timeZone;
-    private List<String> recurrence;
-    private List<String> attendeesEmails;
-    private List<Reminder> reminders;
-
-    // Getters e setters
+    private LocalDateTime startDateTime;
+    private LocalDateTime endDateTime;
 
     public String getSummary() {
         return summary;
@@ -40,74 +37,19 @@ public class GoogleApi {
         this.description = description;
     }
 
-    public String getStartDateTime() {
+    public LocalDateTime getStartDateTime() {
         return startDateTime;
     }
 
-    public void setStartDateTime(String startDateTime) {
+    public void setStartDateTime(LocalDateTime startDateTime) {
         this.startDateTime = startDateTime;
     }
 
-    public String getEndDateTime() {
+    public LocalDateTime getEndDateTime() {
         return endDateTime;
     }
 
-    public void setEndDateTime(String endDateTime) {
+    public void setEndDateTime(LocalDateTime endDateTime) {
         this.endDateTime = endDateTime;
-    }
-
-    public String getTimeZone() {
-        return timeZone;
-    }
-
-    public void setTimeZone(String timeZone) {
-        this.timeZone = timeZone;
-    }
-
-    public List<String> getRecurrence() {
-        return recurrence;
-    }
-
-    public void setRecurrence(List<String> recurrence) {
-        this.recurrence = recurrence;
-    }
-
-    public List<String> getAttendeesEmails() {
-        return attendeesEmails;
-    }
-
-    public void setAttendeesEmails(List<String> attendeesEmails) {
-        this.attendeesEmails = attendeesEmails;
-    }
-
-    public List<Reminder> getReminders() {
-        return reminders;
-    }
-
-    public void setReminders(List<Reminder> reminders) {
-        this.reminders = reminders;
-    }
-
-    public static class Reminder {
-        private String method;
-        private int minutes;
-
-        // Getters e setters
-
-        public String getMethod() {
-            return method;
-        }
-
-        public void setMethod(String method) {
-            this.method = method;
-        }
-
-        public int getMinutes() {
-            return minutes;
-        }
-
-        public void setMinutes(int minutes) {
-            this.minutes = minutes;
-        }
     }
 }
