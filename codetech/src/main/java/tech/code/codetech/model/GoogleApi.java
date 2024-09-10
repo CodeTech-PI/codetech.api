@@ -8,7 +8,9 @@ import java.util.List;
 public class GoogleApi {
 
     private String summary;
-    private String location;
+//    private String location;
+
+
     private String description;
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
@@ -21,13 +23,13 @@ public class GoogleApi {
         this.summary = summary;
     }
 
-    public String getLocation() {
-        return location;
-    }
+//    public String getLocation() {
+//        return location;
+//    }
 
-    public void setLocation(String location) {
-        this.location = location;
-    }
+//    public void setLocation(String location) {
+//        this.location = location;
+//    }
 
     public String getDescription() {
         return description;

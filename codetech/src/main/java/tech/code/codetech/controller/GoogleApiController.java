@@ -40,24 +40,30 @@ public class GoogleApiController {
                 .setApplicationName("CodeTech")
                 .build();
 
+
         Event event = new Event()
                 .setSummary(eventRequest.getSummary())
-                .setLocation(eventRequest.getLocation())
                 .setDescription(eventRequest.getDescription());
 
         // Converter LocalDateTime para DateTime
-        DateTime startDateTime = new DateTime(eventRequest.getStartDateTime().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
-        DateTime endDateTime = new DateTime(eventRequest.getEndDateTime().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
+        LocalDateTime startDateTime = eventRequest.getStartDateTime();
+        LocalDateTime endDateTime = eventRequest.getEndDateTime();
 
-        EventDateTime start = new EventDateTime().setDateTime(startDateTime);
-        EventDateTime end = new EventDateTime().setDateTime(endDateTime);
+        DateTime startGoogleDateTime = new DateTime(ZonedDateTime.of(startDateTime, ZoneId.systemDefault()).toInstant().toEpochMilli());
+        DateTime endGoogleDateTime = new DateTime(ZonedDateTime.of(endDateTime, ZoneId.systemDefault()).toInstant().toEpochMilli());
 
+        EventDateTime start = new EventDateTime().setDateTime(startGoogleDateTime);
+        EventDateTime end = new EventDateTime().setDateTime(endGoogleDateTime);
         event.setStart(start);
         event.setEnd(end);
 
         String calendarId = "primary";
         event = service.events().insert(calendarId, event).execute();
         return "Event created: " + event.getHtmlLink();
+    }
+
+    private LocalDateTime dateTimeToLocalDateTime(DateTime dateTime) {
+        return LocalDateTime.ofInstant(Instant.ofEpochMilli(dateTime.getValue()), ZoneId.systemDefault());
     }
 
     @GetMapping
@@ -76,14 +82,14 @@ public class GoogleApiController {
         List<Event> items = events.getItems();
 
         if (items != null) {
-            bubbleSortEventsByStartTime(items);
+            bubbleSortEventsByDescription(items);
         }
         List<GoogleApi> listaItems = new ArrayList<>();
         for (Event event : items) {
             GoogleApi googleApi = new GoogleApi();
             googleApi.setSummary(event.getSummary());
             googleApi.setDescription(event.getDescription());
-            googleApi.setLocation(event.getLocation());
+//            googleApi.setLocation(event.getLocation());
 
             DateTime startDateTime = event.getStart().getDateTime();
             DateTime endDateTime = event.getEnd().getDateTime();
@@ -111,22 +117,24 @@ public class GoogleApiController {
         return zonedDateTime.toLocalDateTime();
     }
 
-    private void bubbleSortEventsByStartTime(List<Event> events) {
+    private void bubbleSortEventsByDescription(List<Event> events) {
         int n = events.size();
         for (int i = 0; i < n - 1; i++) {
             for (int j = 0; j < n - i - 1; j++) {
-                DateTime start1 = events.get(j).getStart().getDateTime();
-                DateTime start2 = events.get(j + 1).getStart().getDateTime();
+                String description1 = events.get(j).getDescription();
+                String description2 = events.get(j + 1).getDescription();
 
-                if (start1 == null) {
-                    start1 = events.get(j).getStart().getDate();
+                // Verificar se as descrições são nulas e tratar como vazias
+                if (description1 == null) {
+                    description1 = "";
                 }
-                if (start2 == null) {
-                    start2 = events.get(j + 1).getStart().getDate();
+                if (description2 == null) {
+                    description2 = "";
                 }
 
-                // Alterar a comparação para ordenar em ordem decrescente
-                if (start1.getValue() < start2.getValue()) {
+                // Comparar as descrições em ordem crescente
+                if (description1.compareTo(description2) < 0) {
+                    // Trocar eventos se a descrição1 é maior que a descrição2
                     Event temp = events.get(j);
                     events.set(j, events.get(j + 1));
                     events.set(j + 1, temp);
@@ -134,5 +142,6 @@ public class GoogleApiController {
             }
         }
     }
+
 
 }
