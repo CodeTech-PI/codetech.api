@@ -18,5 +18,4 @@ public class Faturamento {
 
     @OneToOne
     private OrdemServico ordemServico;
-
 }

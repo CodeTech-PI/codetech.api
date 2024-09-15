@@ -4,6 +4,9 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import tech.code.codetech.dto.lombardi.request.LombardiRequestDto;
+import tech.code.codetech.dto.lombardi.response.LombardiResponseDto;
+import tech.code.codetech.mapper.UsuarioLombardiMapper;
 import tech.code.codetech.model.UsuarioLombardi;
 import tech.code.codetech.service.UsuarioLombardiService;
 import java.util.Objects;
@@ -16,13 +19,13 @@ public class UsuarioLombardiController {
     private UsuarioLombardiService usuarioLombardiService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<UsuarioLombardi> encontrarPorId(@PathVariable Integer id){
+    public ResponseEntity<LombardiResponseDto> encontrarPorId(@PathVariable Integer id){
         UsuarioLombardi usuarioLombardi = usuarioLombardiService.findById(id);
 
         if(Objects.isNull(usuarioLombardi)){
             return ResponseEntity.status(404).build();
         }
-        return ResponseEntity.status(200).body(usuarioLombardi);
+        return ResponseEntity.status(200).body(UsuarioLombardiMapper.toResponseDto(usuarioLombardi));
     }
 
     @PostMapping
@@ -32,31 +35,31 @@ public class UsuarioLombardiController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UsuarioLombardi> post(@RequestBody @Valid UsuarioLombardi usuarioLombardi) {
-       UsuarioLombardi usuario = usuarioLombardiService.findByEmailAndSenha(usuarioLombardi.getEmail(), usuarioLombardi.getSenha());
+    public ResponseEntity<LombardiResponseDto> post(@RequestBody @Valid LombardiResponseDto dto) {
+       UsuarioLombardi usuario = usuarioLombardiService.findByEmailAndSenha(dto.getEmail(), dto.getSenha());
 
         if (usuario == null) {
             return ResponseEntity.status(404).build();
         }
-            return ResponseEntity.status(200).body(usuario);
+            return ResponseEntity.status(200).body(UsuarioLombardiMapper.toResponseDto(usuario));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UsuarioLombardi> atualizar(@PathVariable Integer id, @RequestBody @Valid UsuarioLombardi usuarioLombardi){
+    public ResponseEntity<LombardiResponseDto> atualizar(@PathVariable Integer id, @RequestBody @Valid LombardiRequestDto lombardiAtualizado){
 
         if(Objects.isNull(id) || id <= 0){
             return ResponseEntity.status(404).build();
-        } else if(Objects.isNull(usuarioLombardi)){
+        } else if(Objects.isNull(lombardiAtualizado)){
             return ResponseEntity.status(400).build();
         }
 
-        UsuarioLombardi userLombardiExists = usuarioLombardiService.update(id, usuarioLombardi);
+        UsuarioLombardi userLombardiExists = usuarioLombardiService.update(id, UsuarioLombardiMapper.toModel(lombardiAtualizado));
 
         if(Objects.isNull(userLombardiExists)){
             return ResponseEntity.status(404).build();
         }
 
-        return ResponseEntity.status(200).body(userLombardiExists);
+        return ResponseEntity.status(200).body(UsuarioLombardiMapper.toResponseDto(userLombardiExists));
     }
 
     @DeleteMapping("/{id}")
