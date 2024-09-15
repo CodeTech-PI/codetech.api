@@ -5,6 +5,9 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import tech.code.codetech.dto.ordem.request.OrdemServicoRequestDto;
+import tech.code.codetech.dto.ordem.response.OrdemServicoResponseDto;
+import tech.code.codetech.mapper.OrdemServicoMapper;
 import tech.code.codetech.model.OrdemServico;
 import tech.code.codetech.service.OrdemServicoService;
 import java.util.Objects;
@@ -17,27 +20,24 @@ public class OrdemServicoController {
     private OrdemServicoService ordemServicoService;
 
     @GetMapping("{id}")
-    public ResponseEntity<OrdemServico> encontrarPorId(@PathVariable int id){
+    public ResponseEntity<OrdemServicoResponseDto> encontrarPorId(@PathVariable int id){
         OrdemServico ordemServicoEncontrada = ordemServicoService.findById(id);
 
         if(Objects.isNull(ordemServicoEncontrada)){
             return ResponseEntity.status(404).build();
         }
 
-        return ResponseEntity.status(200).body(ordemServicoEncontrada);
+        return ResponseEntity.status(200).body(OrdemServicoMapper.toResponseDto(ordemServicoEncontrada));
     }
 
     @PostMapping
-    public ResponseEntity<OrdemServico> post(@RequestBody @Valid OrdemServico ordemServico){
-        if(Objects.isNull(ordemServico)){
-            return ResponseEntity.status(400).build();
-        }
-        OrdemServico ordemServicoSalva = ordemServicoService.save(ordemServico);
-        return ResponseEntity.status(201).body(ordemServicoSalva);
+    public ResponseEntity<OrdemServicoResponseDto> post(@RequestBody @Valid OrdemServicoRequestDto dto){
+        OrdemServico ordemServicoSalva = ordemServicoService.save(OrdemServicoMapper.toModel(dto));
+        return ResponseEntity.status(201).body(OrdemServicoMapper.toResponseDto(ordemServicoSalva));
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<OrdemServico> atualizar(@PathVariable int id, @RequestBody @Valid OrdemServico ordemServicoAtualizada){
+    public ResponseEntity<OrdemServicoResponseDto> atualizar(@PathVariable int id, @RequestBody @Valid OrdemServicoRequestDto ordemServicoAtualizada){
 
         if(Objects.isNull(id) || id <= 0){
             return ResponseEntity.status(404).build();
@@ -45,13 +45,13 @@ public class OrdemServicoController {
             return ResponseEntity.status(400).build();
         }
 
-        OrdemServico ordemServicoExiste = ordemServicoService.update(id, ordemServicoAtualizada);
+        OrdemServico ordemServicoExiste = ordemServicoService.update(id, OrdemServicoMapper.toModel(ordemServicoAtualizada));
 
         if(Objects.isNull(ordemServicoExiste)){
             return ResponseEntity.status(404).build();
         }
 
-        return ResponseEntity.status(200).body(ordemServicoExiste);
+        return ResponseEntity.status(200).body(OrdemServicoMapper.toResponseDto(ordemServicoExiste));
     }
 
     @DeleteMapping("{id}")
