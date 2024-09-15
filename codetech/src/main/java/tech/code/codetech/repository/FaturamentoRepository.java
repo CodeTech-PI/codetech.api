@@ -1,4 +1,4 @@
 package tech.code.codetech.repository;
 
-public class FaturamentoRepository {
+public interface FaturamentoRepository {
 }
