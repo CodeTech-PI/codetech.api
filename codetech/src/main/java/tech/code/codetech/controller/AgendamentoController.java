@@ -4,8 +4,12 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import tech.code.codetech.dto.agendamento.request.AgendamentoRequestDto;
+import tech.code.codetech.dto.agendamento.response.AgendamentoResponseDto;
+import tech.code.codetech.mapper.AgendamentoMapper;
 import tech.code.codetech.model.Agendamento;
 import tech.code.codetech.service.AgendamentoService;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -17,44 +21,38 @@ public class AgendamentoController {
     public AgendamentoService agendamentoService;
 
     @GetMapping
-    // metodo, do tipo lista e a lista é do tipo Agendamento;
-    // ResponseEntity envia respostas HTTP
-    public ResponseEntity<List<Agendamento>> listar() { //ResponseEntity é um metodo já existente
+    public ResponseEntity<List<AgendamentoResponseDto>> listar() {
         List<Agendamento> agendamentos = agendamentoService.findAll();
 
-        if (agendamentos.isEmpty()) { // a lista está vazia?
-            return ResponseEntity.status(204).build(); // vazio
+        if (agendamentos.isEmpty()) {
+            return ResponseEntity.status(204).build();
         }
-        return ResponseEntity.status(200).body(agendamentos); // oky
-    }
 
+        List<AgendamentoResponseDto> resposta = new ArrayList<>();
+        for (Agendamento agendamento : agendamentos) {
+            resposta.add(AgendamentoMapper.toResponseDto(agendamento));
+        }
+        return ResponseEntity.status(200).body(resposta);
+    }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Agendamento> encontrarPorId(@PathVariable Integer id) {
+    public ResponseEntity<AgendamentoResponseDto> encontrarPorId(@PathVariable Integer id) {
         Agendamento agendamentoEncontrado = agendamentoService.findById(id);
 
-        // Objects.isNull(agendamentoEncontrado) || agendamentoEncontrado == null fazem a mesma coisa
         if (agendamentoEncontrado == null) {
-            return ResponseEntity.status(404).build(); // não foi encontrado
+            return ResponseEntity.status(404).build();
         }
-        return ResponseEntity.status(200).body(agendamentoEncontrado); // oky
+        return ResponseEntity.status(200).body(AgendamentoMapper.toResponseDto(agendamentoEncontrado));
     }
 
-    //criando agendamento
     @PostMapping
-    public ResponseEntity<Agendamento> agendar(@RequestBody @Valid Agendamento agendamento) {
-
-        // Objects.isNull(agendamentoEncontrado) || agendamentoEncontrado == null fazem a mesma coisa
-        if (Objects.isNull(agendamento)) {
-            return ResponseEntity.status(400).build(); // não foi encontrado
-        }
-        Agendamento agendamentoConcluido = agendamentoService.save(agendamento);
-        return ResponseEntity.status(201).body(agendamentoConcluido); // oky, foi criado
+    public ResponseEntity<AgendamentoResponseDto> agendar(@RequestBody @Valid AgendamentoRequestDto agendamento) {
+        Agendamento agendamentoConcluido = agendamentoService.save(AgendamentoMapper.toModel(agendamento));
+        return ResponseEntity.status(201).body(AgendamentoMapper.toResponseDto(agendamentoConcluido));
     }
 
-    //remarcando
     @PutMapping("/{id}")
-    public ResponseEntity<Agendamento> remarcar(@PathVariable Integer id, @RequestBody Agendamento agendamentoAtualizado) {
+    public ResponseEntity<AgendamentoResponseDto> remarcar(@PathVariable Integer id, @RequestBody AgendamentoRequestDto agendamentoAtualizado) {
 
         if (Objects.isNull(id) || id <= 0) {
             return ResponseEntity.status(404).build();
@@ -74,16 +72,15 @@ public class AgendamentoController {
                 }
             }
 
-            Agendamento agendamentoConcluido = agendamentoService.update(id, agendamentoAtualizado);
+            Agendamento agendamentoConcluido = agendamentoService.update(id, AgendamentoMapper.toModel(agendamentoAtualizado));
 
             if (Objects.isNull(agendamentoConcluido)) {
             return ResponseEntity.status(404).build();
         }
 
-        return ResponseEntity.status(200).body(agendamentoConcluido);
+        return ResponseEntity.status(200).body(AgendamentoMapper.toResponseDto(agendamentoConcluido));
     }
 
-    //cancelando
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Integer id) {
 
@@ -92,7 +89,7 @@ public class AgendamentoController {
         }
 
         boolean isDeleted = agendamentoService.delete(id);
-        if (!isDeleted) { // se for falso
+        if (!isDeleted) {
             return ResponseEntity.status(404).build();
         }
         return ResponseEntity.status(204).build();
