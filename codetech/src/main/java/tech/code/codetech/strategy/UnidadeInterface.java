@@ -1,4 +1,4 @@
 package tech.code.codetech.strategy;
 
-public interface FaturamentoInterface {
+public interface UnidadeInterface {
 }
