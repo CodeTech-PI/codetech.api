@@ -3,24 +3,20 @@ package tech.code.codetech.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Agendamento {
+public class Faturamento {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private LocalDate data;
-    private LocalTime horario;
-    private boolean cancelado = false;
+    private Double lucro;
 
-    @ManyToOne
-    private Usuario usuario;
+    @OneToOne
+    private OrdemServico ordemServico;
+
 }
