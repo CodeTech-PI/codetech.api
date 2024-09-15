@@ -10,7 +10,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Enabled
+@Entity
 public class OrdemServico {
 
     @Id
