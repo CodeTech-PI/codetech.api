@@ -1,58 +1,83 @@
 package tech.code.codetech.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import tech.code.codetech.dto.unidade.request.UnidadeRequestDto;
+import tech.code.codetech.dto.unidade.response.UnidadeResponseDto;
+import tech.code.codetech.mapper.UnidadeMapper;
 import tech.code.codetech.model.Unidade;
+import tech.code.codetech.service.UnidadeService;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/unidades")
 public class UnidadeController {
 
-    public Unidade buscarUnidadePorCep(String cep){
-        RestTemplate restTemplate = new RestTemplate();
-        String url = "https://viacep.com.br/ws/"+cep+"/json/";
-        return restTemplate.getForObject(url, Unidade.class);
+    @Autowired
+    private UnidadeService unidadeService;
+
+    @GetMapping
+    public ResponseEntity<List<UnidadeResponseDto>> listar() {
+        List<Unidade> listUnidades = unidadeService.findAll();
+
+        if (listUnidades.isEmpty()) {
+            return ResponseEntity.status(204).build();
+        }
+        List<UnidadeResponseDto> resposta = new ArrayList<>();
+
+        for (Unidade unidade : listUnidades) {
+            resposta.add(UnidadeMapper.toResponseDto(unidade));
+        }
+        return ResponseEntity.status(200).body(resposta);
     }
 
-    public void ordenarPorLogradouro(Unidade[] unidades){
-        for (int i = 0; i < unidades.length - 1 ; i++) {
-            int indiceMenor = i;
-            for (int j = i + 1; j < unidades.length; j++) {
-                String logradouroAtual = unidades[j].getLogradouro();
-                String logradouroMenor = unidades[indiceMenor].getLogradouro();
+    @GetMapping("/{id}")
+    public ResponseEntity<UnidadeResponseDto> buscarPorId(@PathVariable Integer id) {
+        Unidade unidade = unidadeService.findById(id);
 
-                if(logradouroAtual != null && (logradouroMenor == null || logradouroAtual.compareTo(logradouroMenor) < 0)){
-                    indiceMenor = j;
-                }
-            }
-            if(indiceMenor != i){
-                Unidade unidadeTemporaria = unidades[i];
-                unidades[i] = unidades[indiceMenor];
-                unidades[indiceMenor] = unidadeTemporaria;
-            }
+        if (Objects.isNull(unidade)) {
+            return ResponseEntity.status(404).build();
         }
+        return ResponseEntity.status(200).body(UnidadeMapper.toResponseDto(unidade));
     }
 
-    public Unidade[] buscarEordenarUnidadesPorLogradouro(String[] ceps){
-           Unidade[] unidades = new Unidade[ceps.length];
-        for (int i = 0; i < ceps.length; i++) {
-            unidades[i] = buscarUnidadePorCep(ceps[i]);
-        }
-        ordenarPorLogradouro(unidades);
-        return unidades;
+    @PostMapping
+    public ResponseEntity<UnidadeResponseDto> post(@RequestBody @Valid UnidadeRequestDto dto) {
+        Unidade unidade = UnidadeMapper.toModel(dto);
+        return ResponseEntity.status(201).body(UnidadeMapper.toResponseDto(unidade));
     }
 
-    public static void main(String[] args){
-        UnidadeController controller = new UnidadeController();
-        String[] ceps = {"01001-000", "01002-000", "01003-000", "01234-000", "00000-001"};
-        Unidade[] unidades = controller.buscarEordenarUnidadesPorLogradouro(ceps);
-        for (Unidade unidade : unidades) {
-            if(unidade != null && unidade.getLogradouro() != null){
-                System.out.println(unidade.getLogradouro());
-            }else{
-                System.out.println("Unidade não encontrada");
-            }
+    @PutMapping("/{id}")
+    public ResponseEntity<UnidadeResponseDto> atualizar(@PathVariable Integer id, @RequestBody @Valid UnidadeRequestDto unidadeAtualizada) {
+
+        if (Objects.isNull(id) || id <= 0) {
+            return ResponseEntity.status(404).build();
+        } else if (Objects.isNull(unidadeAtualizada)) {
+            return ResponseEntity.status(400).build();
         }
+
+        Unidade unidadeExists = unidadeService.update(id, UnidadeMapper.toModel(unidadeAtualizada));
+
+        if (Objects.isNull(unidadeExists)) {
+            return ResponseEntity.status(404).build();
+        }
+        return ResponseEntity.status(200).body(UnidadeMapper.toResponseDto(unidadeExists));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletar(@PathVariable Integer id) {
+        if(Objects.isNull(id) || id <= 0){
+            return ResponseEntity.status(404).build();
+        }
+
+        boolean isDeleted = unidadeService.delete(id);
+        if(!isDeleted){
+            return ResponseEntity.status(404).build();
+        }
+        return ResponseEntity.status(204).build();
     }
 }

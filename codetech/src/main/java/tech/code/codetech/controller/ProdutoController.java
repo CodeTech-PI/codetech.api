@@ -16,7 +16,6 @@ import tech.code.codetech.dto.produto.response.ProdutoResponseDto;
 import tech.code.codetech.mapper.ProdutoMapper;
 import tech.code.codetech.model.Produto;
 import tech.code.codetech.service.ProdutoService;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -83,7 +82,6 @@ public class    ProdutoController {
         if(Objects.isNull(produtoEncontrado)){
             return ResponseEntity.status(404).build();
         }
-
         return ResponseEntity.status(200).body(ProdutoMapper.toResponseDto(produtoEncontrado));
     }
 
@@ -107,7 +105,6 @@ public class    ProdutoController {
         if(Objects.isNull(productExists)){
             return ResponseEntity.status(404).build();
         }
-
         return ResponseEntity.status(200).body(ProdutoMapper.toResponseDto(productExists));
     }
 
@@ -124,4 +121,3 @@ public class    ProdutoController {
         return ResponseEntity.status(204).build();
     }
 }
-

@@ -13,8 +13,21 @@ import java.util.List;
 @Service
 public class UsuarioService implements UsuarioInterface {
 
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+
     @Transactional
-    public Usuario save(Usuario usuario){return usuarioRepository.save(usuario);}
+    public Usuario save(Usuario usuario){
+        return usuarioRepository.save(usuario);
+    }
+
+    public Usuario findById(Integer id){
+        return usuarioRepository.findById(id).orElse(null);
+    }
+
+    public List<Usuario> findAll(){
+        return usuarioRepository.findAll();
+    }
 
     public Usuario update(Integer id, Usuario usuario){
         if(!usuarioRepository.existsById(id)){
@@ -24,14 +37,6 @@ public class UsuarioService implements UsuarioInterface {
         return usuarioRepository.save(usuario);
     }
 
-    @Autowired
-    private UsuarioRepository usuarioRepository;
-
-    public List<Usuario> findAll(){return usuarioRepository.findAll();}
-
-    public Usuario findById(Integer id){
-        return usuarioRepository.findById(id).orElse(null);}
-
     public boolean delete(Integer id){
         if(!usuarioRepository.existsById(id)){
             return false;
@@ -39,6 +44,4 @@ public class UsuarioService implements UsuarioInterface {
         usuarioRepository.deleteById(id);
         return true;
     }
-
-
 }
