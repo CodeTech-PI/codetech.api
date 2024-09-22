@@ -10,6 +10,9 @@ import tech.code.codetech.dto.ordem.response.OrdemServicoResponseDto;
 import tech.code.codetech.mapper.OrdemServicoMapper;
 import tech.code.codetech.model.OrdemServico;
 import tech.code.codetech.service.OrdemServicoService;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @RestController
@@ -19,7 +22,22 @@ public class OrdemServicoController {
     @Autowired
     private OrdemServicoService ordemServicoService;
 
-    @GetMapping("{id}")
+    @GetMapping
+    public ResponseEntity<List<OrdemServicoResponseDto>> listar(){
+        List<OrdemServico> listOrdemServico = ordemServicoService.findAll();
+
+        if(listOrdemServico.isEmpty()){
+            return ResponseEntity.status(204).build();
+        }
+        List<OrdemServicoResponseDto> resposta = new ArrayList<>();
+
+        for (OrdemServico ordemServico : listOrdemServico) {
+            resposta.add(OrdemServicoMapper.toResponseDto(ordemServico));
+        }
+        return ResponseEntity.status(200).body(resposta);
+    }
+
+    @GetMapping("/{id}")
     public ResponseEntity<OrdemServicoResponseDto> encontrarPorId(@PathVariable int id){
         OrdemServico ordemServicoEncontrada = ordemServicoService.findById(id);
 
@@ -36,7 +54,7 @@ public class OrdemServicoController {
         return ResponseEntity.status(201).body(OrdemServicoMapper.toResponseDto(ordemServicoSalva));
     }
 
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<OrdemServicoResponseDto> atualizar(@PathVariable int id, @RequestBody @Valid OrdemServicoRequestDto ordemServicoAtualizada){
 
         if(Objects.isNull(id) || id <= 0){
@@ -54,7 +72,7 @@ public class OrdemServicoController {
         return ResponseEntity.status(200).body(OrdemServicoMapper.toResponseDto(ordemServicoExiste));
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable int id){
         if(Objects.isNull(id) || id <= 0){
             return ResponseEntity.status(404).build();

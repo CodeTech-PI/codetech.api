@@ -8,6 +8,8 @@ import tech.code.codetech.model.OrdemServico;
 import tech.code.codetech.repository.OrdemServicoRepository;
 import tech.code.codetech.strategy.OrdemServicoInterface;
 
+import java.util.List;
+
 @Service
 public class OrdemServicoService implements OrdemServicoInterface {
 
@@ -21,6 +23,10 @@ public class OrdemServicoService implements OrdemServicoInterface {
 
     public OrdemServico findById(Integer id){
         return ordemServicoRepository.findById(id).orElse(null);
+    }
+
+    public List<OrdemServico> findAll(){
+        return ordemServicoRepository.findAll();
     }
 
     public OrdemServico update(Integer id, OrdemServico ordemServico){
