@@ -1,10 +1,17 @@
 package tech.code.codetech.controller;
 
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import tech.code.codetech.dto.produto.response.ProdutoResponseDto;
 import tech.code.codetech.dto.usuarios.request.UsuariosRequestDto;
 import tech.code.codetech.dto.usuarios.response.UsuariosResponseDto;
 import tech.code.codetech.mapper.ProdutoMapper;
@@ -17,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@Tag(name = "Usuário")
 @RestController
 @RequestMapping("/usuarios")
 public class UsuarioController {
@@ -24,6 +32,19 @@ public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
+    @Operation(summary = "", description = """
+            # Listar todos os usuários
+            ---
+            Lista todos os usuários no banco de dados
+            """)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ProdutoResponseDto.class)
+                    )
+            )
+    })
     @GetMapping
     public ResponseEntity<List<UsuariosResponseDto>> listar() {
         List<Usuario> listUsuarios = usuarioService.findAll();
@@ -39,6 +60,19 @@ public class UsuarioController {
         return ResponseEntity.status(200).body(usuarios);
     }
 
+    @Operation(summary = "", description = """
+            # Buscar usuário por id
+            ---
+            Retorna um usuário por id específico
+            """)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ProdutoResponseDto.class)
+                    )
+            )
+    })
     @GetMapping("/{id}")
     public ResponseEntity<UsuariosResponseDto> encontrarPorId(@PathVariable Integer id) {
         Usuario usuarioEncontrado = usuarioService.findById(id);
@@ -48,13 +82,37 @@ public class UsuarioController {
         }
         return ResponseEntity.status(200).body(UsuarioMapper.toResponseDto(usuarioEncontrado));
     }
-
+    @Operation(summary = "", description = """
+            # Criar um usuário
+            ---
+            Cria um novo usuário no banco de dados
+            """)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Created",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ProdutoResponseDto.class)
+                    )
+            )
+    })
     @PostMapping
     public ResponseEntity<UsuariosResponseDto> post(@RequestBody @Valid UsuariosRequestDto dto) {
         Usuario usuarioSaved = usuarioService.save(UsuarioMapper.toModel(dto));
         return ResponseEntity.status(201).body(UsuarioMapper.toResponseDto(usuarioSaved));
     }
-
+    @Operation(summary = "", description = """
+            # Atualizar um usuário
+            ---
+            Atualiza um usuário por id específico
+            """)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ProdutoResponseDto.class)
+                    )
+            )
+    })
     @PutMapping("/{id}")
     public ResponseEntity<UsuariosResponseDto> atualizar(@PathVariable Integer id, @RequestBody @Valid UsuariosRequestDto usuarioAtualizado) {
         if (Objects.isNull(id) || id <= 0) {
@@ -71,7 +129,19 @@ public class UsuarioController {
 
         return ResponseEntity.status(200).body(UsuarioMapper.toResponseDto(usuarioExists));
     }
-
+    @Operation(summary = "", description = """
+            # Deletar um usuário
+            ---
+            Deleta um usuário por id específico
+            """)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "No Content",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ProdutoResponseDto.class)
+                    )
+            )
+    })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Integer id) {
         if (Objects.isNull(id) || id < 0) {
