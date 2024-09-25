@@ -28,10 +28,10 @@ public class    ProdutoController {
     @Autowired
     private ProdutoService productService;
 
-    @Operation(summary = "Listar todos os produtos", description = """
+    @Operation(summary = "", description = """
             # Listar todos os produtos
             ---
-            O endpoint lista todos os produtos cadastrados no estoque
+            Lista todos os produtos cadastrados no estoque
             """)
     @ApiResponses(value = {
             @ApiResponse (responseCode = "200", description = "Listar todos os produtos",
@@ -59,10 +59,10 @@ public class    ProdutoController {
         return ResponseEntity.status(200).body(resposta);
     }
 
-    @Operation(summary = "Buscar Produto por ID", description = """
+    @Operation(summary = "", description = """
             # Buscar produto por id
             ---
-            O endpoint encontra um produto específico por id
+            Retorna um produto por id específico
             """)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Mostra um produto específico",
@@ -84,13 +84,37 @@ public class    ProdutoController {
         }
         return ResponseEntity.status(200).body(ProdutoMapper.toResponseDto(produtoEncontrado));
     }
-
+    @Operation(summary = "", description = """
+            # Criar um produto
+            ---
+            Cria um novo produto
+            """)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Created",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ProdutoResponseDto.class)
+                    )
+            )
+    })
     @PostMapping
     public ResponseEntity<ProdutoResponseDto> post(@RequestBody @Valid ProdutoRequestDto dto){
         Produto productSaved = productService.save(ProdutoMapper.toModel(dto));
         return ResponseEntity.status(201).body(ProdutoMapper.toResponseDto(productSaved));
     }
-
+    @Operation(summary = "", description = """
+            # Atualizar um produto
+            ---
+            Atualiza um produto por id específico
+            """)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ProdutoResponseDto.class)
+                    )
+            )
+    })
     @PutMapping("/{id}")
     public ResponseEntity<ProdutoResponseDto> atualizar(@PathVariable Integer id, @RequestBody @Valid ProdutoRequestDto produtoAtualizado){
 
@@ -108,6 +132,19 @@ public class    ProdutoController {
         return ResponseEntity.status(200).body(ProdutoMapper.toResponseDto(productExists));
     }
 
+    @Operation(summary = "", description = """
+            # Deletar um produto
+            ---
+            Deleta um produto por id específico
+            """)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "No Content",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ProdutoResponseDto.class)
+                    )
+            )
+    })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Integer id){
 

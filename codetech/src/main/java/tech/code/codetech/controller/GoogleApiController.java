@@ -9,8 +9,15 @@ import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.EventDateTime;
 import com.google.api.services.calendar.model.Events;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import tech.code.codetech.dto.produto.response.ProdutoResponseDto;
 import tech.code.codetech.model.GoogleApi;
 import tech.code.codetech.service.GoogleApiAuthorizationService;
 
@@ -23,7 +30,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-
+@Tag(name = "GoogleApi")
 @RestController
 @RequestMapping("/api/events")
 public class GoogleApiController {
@@ -32,7 +39,19 @@ public class GoogleApiController {
     private GoogleApiAuthorizationService googleApiAuthorizationService;
 
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
-
+    @Operation(summary = "", description = """
+            # Criar um evento
+            ---
+            Cria um novo evento na Api Calendar
+            """)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Created",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ProdutoResponseDto.class)
+                    )
+            )
+    })
     @PostMapping
     public String criarEvento(@RequestBody GoogleApi eventRequest) throws GeneralSecurityException, IOException {
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
@@ -65,7 +84,19 @@ public class GoogleApiController {
     private LocalDateTime dateTimeToLocalDateTime(DateTime dateTime) {
         return LocalDateTime.ofInstant(Instant.ofEpochMilli(dateTime.getValue()), ZoneId.systemDefault());
     }
-
+    @Operation(summary = "", description = """
+            # Listar todos os eventos
+            ---
+            Lista todos os eventos na Api Calendar
+            """)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ProdutoResponseDto.class)
+                    )
+            )
+    })
     @GetMapping
     public List<GoogleApi> listEvents() throws GeneralSecurityException, IOException {
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
@@ -133,7 +164,7 @@ public class GoogleApiController {
                 }
 
                 // Comparar as descrições em ordem crescente
-                if (description1.compareTo(description2) < 0) {
+                if (description1.compareTo(description2) > 0) {
                     // Trocar eventos se a descrição1 é maior que a descrição2
                     Event temp = events.get(j);
                     events.set(j, events.get(j + 1));
