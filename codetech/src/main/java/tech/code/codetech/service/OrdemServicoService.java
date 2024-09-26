@@ -42,6 +42,8 @@ public class OrdemServicoService implements OrdemServicoInterface {
             return false;
         }
         ordemServicoRepository.deleteById(id);
+
+        
         return true;
     }
 

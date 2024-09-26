@@ -24,5 +24,4 @@ public class OrdemServico {
 
     @ManyToOne
     private Produto produto;
-
 }
