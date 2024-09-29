@@ -18,7 +18,4 @@ public class OrdemServicoRequestDto {
     @NotNull
     private Agendamento agendamento;
 
-    @NotNull
-    private Produto produto;
-
 }

@@ -10,7 +10,6 @@ public class OrdemServicoMapper {
             return OrdemServico.builder()
                     .valorAgendamento(dto.getValorAgendamento())
                     .agendamento(dto.getAgendamento())
-                    .produto(dto.getProduto())
                     .build();
         }
 
@@ -19,7 +18,6 @@ public class OrdemServicoMapper {
                     .id(model.getId())
                     .valorAgendamento(model.getValorAgendamento())
                     .agendamento(model.getAgendamento())
-                    .produto(model.getProduto())
                     .build();
         }
 }

@@ -11,5 +11,4 @@ public class OrdemServicoResponseDto {
     private Integer id;
     private Double valorAgendamento;
     private Agendamento agendamento;
-    private Produto produto;
 }
