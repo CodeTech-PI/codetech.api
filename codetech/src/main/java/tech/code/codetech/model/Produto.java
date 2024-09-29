@@ -19,8 +19,7 @@ public class Produto implements Comparable<Produto> {
     private String nome;
     private String descricao;
     private String categoria;
-    private String unidadeDeMedida;
-    private LocalDate dataDeValidade;
+    private String unidadeMedida;
     private Double preco;
 
     @Override

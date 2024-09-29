@@ -28,7 +28,7 @@ public class ProdutoRequestDto { //Front -> Backend
     private String categoria;
 
     @NotBlank
-    private String unidadeDeMedida;
+    private String unidadeMedida;
 
     @NotNull
     @Positive

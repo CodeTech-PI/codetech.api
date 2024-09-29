@@ -11,6 +11,6 @@ public class ProdutoResponseDto { // Backend -> Front end
     private String nome;
     private String descricao;
     private String categoria;
-    private String unidadeDeMedida;
+    private String unidadeMedida;
     private Double preco;
 }
