@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @Builder
 public class UsuariosResponseDto {
     private Integer id;
-    private String nomeUsuario;
+    private String nome;
     private String cpf;
     private String telefone;
     private String email;

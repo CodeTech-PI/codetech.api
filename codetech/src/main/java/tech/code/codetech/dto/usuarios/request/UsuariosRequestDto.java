@@ -15,7 +15,7 @@ public class UsuariosRequestDto {
 
     @NotBlank
     @Size(min = 3, max = 100)
-    private String nomeUsuario;
+    private String nome;
 
     @NotBlank
     @Size(max = 14)
