@@ -121,7 +121,7 @@ public class AgendamentoController {
         for (Agendamento agendamento : agendamentosExistentes) {
 
             boolean mesmoId = agendamento.getId().equals(id);
-            boolean existeAgendamentoNaData = agendamento.getData().equals(agendamentoAtualizado.getData());
+            boolean existeAgendamentoNaData = agendamento.getDt().equals(agendamentoAtualizado.getDt());
             boolean existeAgendamentoNaHora = agendamento.getHorario().equals(agendamentoAtualizado.getHorario());
 
                 if (!mesmoId && existeAgendamentoNaData && existeAgendamentoNaHora) {

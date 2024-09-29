@@ -10,7 +10,7 @@ import java.time.LocalTime;
 @Builder
 public class AgendamentoResponseDto {
     private Integer id;
-    private LocalDate data;
+    private LocalDate dt;
     private LocalTime horario;
     private boolean cancelado = false;
     private Usuario usuario;

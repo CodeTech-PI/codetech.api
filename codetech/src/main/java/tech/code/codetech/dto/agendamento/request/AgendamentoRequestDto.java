@@ -12,7 +12,7 @@ import java.time.LocalTime;
 public class AgendamentoRequestDto {
 
     @NotNull
-    private LocalDate data;
+    private LocalDate dt;
 
     @NotNull
     private LocalTime horario;

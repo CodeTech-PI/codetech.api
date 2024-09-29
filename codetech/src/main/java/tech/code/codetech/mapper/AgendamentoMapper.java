@@ -8,7 +8,7 @@ public class AgendamentoMapper {
 
     public static Agendamento toModel(AgendamentoRequestDto dto){
         return Agendamento.builder()
-                .data(dto.getData())
+                .dt(dto.getDt())
                 .horario(dto.getHorario())
                 .cancelado(dto.isCancelado())
                 .usuario(dto.getUsuario())
@@ -18,7 +18,7 @@ public class AgendamentoMapper {
     public static AgendamentoResponseDto toResponseDto(Agendamento model){
         return AgendamentoResponseDto.builder()
                 .id(model.getId())
-                .data(model.getData())
+                .dt(model.getDt())
                 .horario(model.getHorario())
                 .cancelado(model.isCancelado())
                 .usuario(model.getUsuario())

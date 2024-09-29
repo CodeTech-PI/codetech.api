@@ -17,10 +17,11 @@ public class Agendamento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private LocalDate data;
+    private LocalDate dt;
     private LocalTime horario;
     private boolean cancelado = false;
 
+    @JoinColumn(name = "cliente_id")
     @ManyToOne
     private Usuario usuario;
 }
