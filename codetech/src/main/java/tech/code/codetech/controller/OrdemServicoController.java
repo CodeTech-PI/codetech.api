@@ -166,7 +166,6 @@ public class OrdemServicoController {
             int indMaior = i;
             for (int j = i + 1; j < vetor.size(); j++) {
 
-                // comparando os valores
                 if (vetor.get(j).getValorAgendamento() > vetor.get(indMaior).getValorAgendamento()) {
                     indMaior = j;
                 }
@@ -174,7 +173,6 @@ public class OrdemServicoController {
 
             if (indMaior != i) {
 
-                // se for verdadeiro, trocará o objeto inteiro
                 OrdemServico aux = vetor.get(i);
                 vetor.set(i, vetor.get(indMaior));
                 vetor.set(indMaior, aux);
