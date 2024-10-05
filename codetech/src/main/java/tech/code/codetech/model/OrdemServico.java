@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import jdk.jfr.Enabled;
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @Builder
@@ -17,7 +19,7 @@ public class OrdemServico {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private Double valorAgendamento;
+    private BigDecimal valorTatuagem;
 
     @OneToOne
     private Agendamento agendamento;
