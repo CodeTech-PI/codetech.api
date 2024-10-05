@@ -3,8 +3,10 @@ package tech.code.codetech.service;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tech.code.codetech.model.ListaProduto;
 import tech.code.codetech.model.Produto;
 import tech.code.codetech.repository.ProdutoRepository;
+import tech.code.codetech.strategy.ListaProdutoInterface;
 import tech.code.codetech.strategy.ProdutoInterface;
 import java.util.List;
 
@@ -13,6 +15,9 @@ public class ProdutoService implements ProdutoInterface {
 
     @Autowired
     private ProdutoRepository productRepository;
+
+    @Autowired
+    private ListaProdutoInterface listaProdutoService;
 
     @Override
     public <E extends Comparable<E>> List<E> ordenar(List<E> lista) {
@@ -56,5 +61,15 @@ public class ProdutoService implements ProdutoInterface {
         }
             productRepository.deleteById(id);
             return true;
+    }
+
+    @Override
+    public void darBaixaEstoque(Integer idAgendamento) {
+        List<ListaProduto> listaProdutos = listaProdutoService.buscarListaProdutosPeloAgendamento(idAgendamento);
+
+        for (ListaProduto listaProduto : listaProdutos) {
+            Produto produto = listaProduto.getProduto();
+            produto.setQuantidade(produto.getQuantidade() - listaProduto.getQuantidadeProdutos());
+        }
     }
 }

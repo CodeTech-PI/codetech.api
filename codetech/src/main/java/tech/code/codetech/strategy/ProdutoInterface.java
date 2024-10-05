@@ -11,4 +11,6 @@ public interface ProdutoInterface extends Ordenavel {
     Produto findById(Integer id);
     Produto update(Integer id, Produto product);
     boolean delete(Integer id);
+
+    void darBaixaEstoque(Integer idAgendamento);
 }

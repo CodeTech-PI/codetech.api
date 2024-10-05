@@ -15,8 +15,8 @@ public class ListaProdutoService implements ListaProdutoInterface {
     private ListaProdutoRepository listaProdutoRepository;
 
     @Transactional
-    public ListaProduto save(ListaProduto listaProduto){
-        return listaProdutoRepository.save(listaProduto);
+    public List<ListaProduto> saveAll(List<ListaProduto> listaProduto){
+        return listaProdutoRepository.saveAll(listaProduto);
     }
 
     public ListaProduto findById(Integer id){
@@ -27,12 +27,18 @@ public class ListaProdutoService implements ListaProdutoInterface {
         return listaProdutoRepository.findAll();
     }
 
-    public ListaProduto update(Integer id, ListaProduto listaProduto){
+    public List<ListaProduto> update(Integer id, List<ListaProduto> listaProduto){
         if(!listaProdutoRepository.existsById(id)){
             return null;
         }
-        listaProduto.setId(id);
-        return listaProdutoRepository.save(listaProduto);
+        definirId(id, listaProduto);
+        return saveAll(listaProduto);
+    }
+
+    private void definirId(Integer id, List<ListaProduto> listaProduto) {
+        for (ListaProduto produto : listaProduto) {
+            produto.setId(id);
+        }
     }
 
     public boolean delete(Integer id){
@@ -43,4 +49,8 @@ public class ListaProdutoService implements ListaProdutoInterface {
         return true;
     }
 
+    @Override
+    public List<ListaProduto> buscarListaProdutosPeloAgendamento(Integer idAgendamento) {
+        return listaProdutoRepository.findByAgendamentoId(idAgendamento);
+    }
 }

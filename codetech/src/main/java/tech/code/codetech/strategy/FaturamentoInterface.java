@@ -1,6 +1,9 @@
 package tech.code.codetech.strategy;
 
 import tech.code.codetech.model.Faturamento;
+import tech.code.codetech.model.OrdemServico;
+
+import java.math.BigDecimal;
 
 public interface FaturamentoInterface {
 
@@ -12,4 +15,5 @@ public interface FaturamentoInterface {
 
     boolean delete(Integer id);
 
+    BigDecimal calcularLucro(OrdemServico ordemServico);
 }
