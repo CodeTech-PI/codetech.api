@@ -1,6 +1,9 @@
 package tech.code.codetech.strategy;
 
+import tech.code.codetech.dto.ordem.OrdemServicoLucroDto;
 import tech.code.codetech.model.OrdemServico;
+
+import java.util.List;
 
 public interface OrdemServicoInterface {
 
@@ -12,4 +15,7 @@ public interface OrdemServicoInterface {
 
    boolean delete(Integer id);
 
+   List<OrdemServico> findAll();
+
+    OrdemServicoLucroDto executarOrdemServico(OrdemServico model);
 }

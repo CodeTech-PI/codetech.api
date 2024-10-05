@@ -4,6 +4,7 @@ import jakarta.validation.constraints.*;
 import lombok.Builder;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 
@@ -28,9 +29,9 @@ public class ProdutoRequestDto { //Front -> Backend
     private String categoria;
 
     @NotBlank
-    private String unidadeDeMedida;
+    private String unidadeMedida;
 
     @NotNull
     @Positive
-    private Double preco;
+    private BigDecimal preco;
 }

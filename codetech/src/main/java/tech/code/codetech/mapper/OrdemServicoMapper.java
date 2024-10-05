@@ -1,5 +1,6 @@
 package tech.code.codetech.mapper;
 
+import tech.code.codetech.dto.ordem.OrdemServicoLucroDto;
 import tech.code.codetech.dto.ordem.request.OrdemServicoRequestDto;
 import tech.code.codetech.dto.ordem.response.OrdemServicoResponseDto;
 import tech.code.codetech.model.OrdemServico;
@@ -8,18 +9,17 @@ public class OrdemServicoMapper {
 
         public static OrdemServico toModel(OrdemServicoRequestDto dto){
             return OrdemServico.builder()
-                    .valorAgendamento(dto.getValorAgendamento())
+                    .valorTatuagem(dto.getValorTatuagem())
                     .agendamento(dto.getAgendamento())
-                    .produto(dto.getProduto())
                     .build();
         }
 
-        public static OrdemServicoResponseDto toResponseDto(OrdemServico model){
+        public static OrdemServicoResponseDto toResponseDto(OrdemServicoLucroDto dto){
             return OrdemServicoResponseDto.builder()
-                    .id(model.getId())
-                    .valorAgendamento(model.getValorAgendamento())
-                    .agendamento(model.getAgendamento())
-                    .produto(model.getProduto())
+                    .id(dto.getOrdemServico().getId())
+                    .valorTatuagem(dto.getOrdemServico().getValorTatuagem())
+                    .agendamento(dto.getOrdemServico().getAgendamento())
+                    .lucro(dto.getLucro())
                     .build();
         }
 }

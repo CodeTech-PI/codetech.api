@@ -11,73 +11,76 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import tech.code.codetech.dto.ordem.OrdemServicoLucroDto;
 import tech.code.codetech.dto.ordem.request.OrdemServicoRequestDto;
 import tech.code.codetech.dto.ordem.response.OrdemServicoResponseDto;
 import tech.code.codetech.dto.produto.response.ProdutoResponseDto;
 import tech.code.codetech.mapper.OrdemServicoMapper;
 import tech.code.codetech.model.OrdemServico;
 import tech.code.codetech.service.OrdemServicoService;
+import tech.code.codetech.strategy.OrdemServicoInterface;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 @Tag(name = "Ordem de Serviço")
 @RestController
-@RequestMapping("/ordens-servico")
+@RequestMapping("/ordens-servicos")
 public class OrdemServicoController {
 
     @Autowired
-    private OrdemServicoService ordemServicoService;
-    @Operation(summary = "", description = """
-            # Listar todas as ordens de serviço
-            ---
-            Lista todas as ordens de serviço no banco de dados
-            """)
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ProdutoResponseDto.class)
-                    )
-            )
-    })
-    @GetMapping
-    public ResponseEntity<List<OrdemServicoResponseDto>> listar(){
-        List<OrdemServico> listOrdemServico = ordemServicoService.findAll();
+    private OrdemServicoInterface ordemServicoService;
 
-        if(listOrdemServico.isEmpty()){
-            return ResponseEntity.status(204).build();
-        }
-        List<OrdemServicoResponseDto> resposta = new ArrayList<>();
-
-        for (OrdemServico ordemServico : listOrdemServico) {
-            resposta.add(OrdemServicoMapper.toResponseDto(ordemServico));
-        }
-        return ResponseEntity.status(200).body(resposta);
-    }
-    @Operation(summary = "", description = """
-            # Buscar uma ordem de serviço por id
-            ---
-            Retorna uma ordem de serviço por id específico
-            """)
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ProdutoResponseDto.class)
-                    )
-            )
-    })
-    @GetMapping("/{id}")
-    public ResponseEntity<OrdemServicoResponseDto> encontrarPorId(@PathVariable int id){
-        OrdemServico ordemServicoEncontrada = ordemServicoService.findById(id);
-
-        if(Objects.isNull(ordemServicoEncontrada)){
-            return ResponseEntity.status(404).build();
-        }
-
-        return ResponseEntity.status(200).body(OrdemServicoMapper.toResponseDto(ordemServicoEncontrada));
-    }
+//    @Operation(summary = "", description = """
+//            # Listar todas as ordens de serviço
+//            ---
+//            Lista todas as ordens de serviço no banco de dados
+//            """)
+//    @ApiResponses(value = {
+//            @ApiResponse(responseCode = "200", description = "OK",
+//                    content = @Content(
+//                            mediaType = "application/json",
+//                            schema = @Schema(implementation = ProdutoResponseDto.class)
+//                    )
+//            )
+//    })
+//    @GetMapping
+//    public ResponseEntity<List<OrdemServicoResponseDto>> listar(){
+//        List<OrdemServico> listOrdemServico = ordemServicoService.findAll();
+//
+//        if(listOrdemServico.isEmpty()){
+//            return ResponseEntity.status(204).build();
+//        }
+//        List<OrdemServicoResponseDto> resposta = new ArrayList<>();
+//
+//        for (OrdemServico ordemServico : listOrdemServico) {
+//            resposta.add(OrdemServicoMapper.toResponseDto(ordemServico));
+//        }
+//        return ResponseEntity.status(200).body(resposta);
+//    }
+//    @Operation(summary = "", description = """
+//            # Buscar uma ordem de serviço por id
+//            ---
+//            Retorna uma ordem de serviço por id específico
+//            """)
+//    @ApiResponses(value = {
+//            @ApiResponse(responseCode = "200", description = "OK",
+//                    content = @Content(
+//                            mediaType = "application/json",
+//                            schema = @Schema(implementation = ProdutoResponseDto.class)
+//                    )
+//            )
+//    })
+//    @GetMapping("/{id}")
+//    public ResponseEntity<OrdemServicoResponseDto> encontrarPorId(@PathVariable int id){
+//        OrdemServico ordemServicoEncontrada = ordemServicoService.findById(id);
+//
+//        if(Objects.isNull(ordemServicoEncontrada)){
+//            return ResponseEntity.status(404).build();
+//        }
+//
+//        return ResponseEntity.status(200).body(OrdemServicoMapper.toResponseDto(ordemServicoEncontrada));
+//    }
     @Operation(summary = "", description = """
             # Criar uma ordem de serviço
             ---
@@ -93,39 +96,40 @@ public class OrdemServicoController {
     })
     @PostMapping
     public ResponseEntity<OrdemServicoResponseDto> post(@RequestBody @Valid OrdemServicoRequestDto dto){
-        OrdemServico ordemServicoSalva = ordemServicoService.save(OrdemServicoMapper.toModel(dto));
+        OrdemServicoLucroDto ordemServicoSalva = ordemServicoService.executarOrdemServico(OrdemServicoMapper.toModel(dto));
         return ResponseEntity.status(201).body(OrdemServicoMapper.toResponseDto(ordemServicoSalva));
     }
-    @Operation(summary = "", description = """
-            # Atualizar uma ordem de serviço
-            ---
-            Atualiza uma ordem de serviço por id específico
-            """)
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ProdutoResponseDto.class)
-                    )
-            )
-    })
-    @PutMapping("/{id}")
-    public ResponseEntity<OrdemServicoResponseDto> atualizar(@PathVariable int id, @RequestBody @Valid OrdemServicoRequestDto ordemServicoAtualizada){
 
-        if(Objects.isNull(id) || id <= 0){
-            return ResponseEntity.status(404).build();
-        } else if(Objects.isNull(ordemServicoAtualizada)){
-            return ResponseEntity.status(400).build();
-        }
-
-        OrdemServico ordemServicoExiste = ordemServicoService.update(id, OrdemServicoMapper.toModel(ordemServicoAtualizada));
-
-        if(Objects.isNull(ordemServicoExiste)){
-            return ResponseEntity.status(404).build();
-        }
-
-        return ResponseEntity.status(200).body(OrdemServicoMapper.toResponseDto(ordemServicoExiste));
-    }
+//    @Operation(summary = "", description = """
+//            # Atualizar uma ordem de serviço
+//            ---
+//            Atualiza uma ordem de serviço por id específico
+//            """)
+//    @ApiResponses(value = {
+//            @ApiResponse(responseCode = "200", description = "OK",
+//                    content = @Content(
+//                            mediaType = "application/json",
+//                            schema = @Schema(implementation = ProdutoResponseDto.class)
+//                    )
+//            )
+//    })
+//    @PutMapping("/{id}")
+//    public ResponseEntity<OrdemServicoResponseDto> atualizar(@PathVariable int id, @RequestBody @Valid OrdemServicoRequestDto ordemServicoAtualizada){
+//
+//        if(Objects.isNull(id) || id <= 0){
+//            return ResponseEntity.status(404).build();
+//        } else if(Objects.isNull(ordemServicoAtualizada)){
+//            return ResponseEntity.status(400).build();
+//        }
+//
+//        OrdemServico ordemServicoExiste = ordemServicoService.update(id, OrdemServicoMapper.toModel(ordemServicoAtualizada));
+//
+//        if(Objects.isNull(ordemServicoExiste)){
+//            return ResponseEntity.status(404).build();
+//        }
+//
+//        return ResponseEntity.status(200).body(OrdemServicoMapper.toResponseDto(ordemServicoExiste));
+//    }
     @Operation(summary = "", description = """
             # Deletar uma ordem de serviço
             ---

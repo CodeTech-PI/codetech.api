@@ -2,6 +2,8 @@ package tech.code.codetech.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Getter
@@ -19,9 +21,8 @@ public class Produto implements Comparable<Produto> {
     private String nome;
     private String descricao;
     private String categoria;
-    private String unidadeDeMedida;
-    private LocalDate dataDeValidade;
-    private Double preco;
+    private String unidadeMedida;
+    private BigDecimal preco;
 
     @Override
     public int compareTo(Produto o) {

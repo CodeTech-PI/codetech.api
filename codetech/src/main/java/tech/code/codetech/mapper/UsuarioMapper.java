@@ -8,7 +8,7 @@ public class UsuarioMapper {
 
     public static Usuario toModel(UsuariosRequestDto dto){
         return Usuario.builder()
-                .nomeUsuario(dto.getNomeUsuario())
+                .nome(dto.getNome())
                 .cpf(dto.getCpf())
                 .telefone(dto.getTelefone())
                 .email(dto.getEmail())
@@ -19,7 +19,7 @@ public class UsuarioMapper {
     public static UsuariosResponseDto toResponseDto(Usuario model){
         return UsuariosResponseDto.builder()
                 .id(model.getId())
-                .nomeUsuario(model.getNomeUsuario())
+                .nome(model.getNome())
                 .cpf(model.getCpf())
                 .telefone(model.getTelefone())
                 .email(model.getEmail())

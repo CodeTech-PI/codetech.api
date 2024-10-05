@@ -1,5 +1,4 @@
-package tech.code.codetech.dto.faturamento.response;
-
+package tech.code.codetech.dto.ordem;
 
 import lombok.Builder;
 import lombok.Data;
@@ -9,9 +8,8 @@ import java.math.BigDecimal;
 
 @Data
 @Builder
-public class FaturamentoResponseDto {
+public class OrdemServicoLucroDto {
 
-    private Integer id;
-    private BigDecimal lucro;
     private OrdemServico ordemServico;
+    private BigDecimal lucro;
 }

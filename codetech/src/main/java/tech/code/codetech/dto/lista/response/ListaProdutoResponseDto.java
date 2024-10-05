@@ -1,17 +1,15 @@
-package tech.code.codetech.dto.ordem.response;
+package tech.code.codetech.dto.lista.response;
 
 import lombok.Builder;
 import lombok.Data;
 import tech.code.codetech.model.Agendamento;
 import tech.code.codetech.model.Produto;
 
-import java.math.BigDecimal;
-
 @Data
 @Builder
-public class OrdemServicoResponseDto {
+public class ListaProdutoResponseDto {
     private Integer id;
-    private BigDecimal valorTatuagem;
-    private BigDecimal lucro;
+    private Integer quantidade;
+    private Produto produto;
     private Agendamento agendamento;
 }

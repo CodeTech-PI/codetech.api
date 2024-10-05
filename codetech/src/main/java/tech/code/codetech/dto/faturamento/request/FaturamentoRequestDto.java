@@ -5,13 +5,15 @@ import lombok.Builder;
 import lombok.Data;
 import tech.code.codetech.model.OrdemServico;
 
+import java.math.BigDecimal;
+
 
 @Data
 @Builder
 public class FaturamentoRequestDto {
 
     @NotNull
-    private Double lucro;
+    private BigDecimal lucro;
 
     @NotNull
     private OrdemServico ordemServico;

@@ -1,11 +1,7 @@
 package tech.code.codetech.model;
 
-
 import jakarta.persistence.*;
-import jdk.jfr.Enabled;
 import lombok.*;
-
-import java.math.BigDecimal;
 
 @Getter
 @Setter
@@ -13,14 +9,16 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class OrdemServico {
+public class ListaProduto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    private Integer quantidadeProdutos;
 
-    private BigDecimal valorTatuagem;
+    @ManyToOne
+    private Produto produto;
 
-    @OneToOne
+    @ManyToOne
     private Agendamento agendamento;
 }

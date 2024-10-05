@@ -12,7 +12,7 @@ public class ProdutoMapper {
                 .nome(dto.getNome())
                 .descricao(dto.getDescricao())
                 .categoria(dto.getCategoria())
-                .unidadeDeMedida(dto.getUnidadeDeMedida())
+                .unidadeMedida(dto.getUnidadeMedida())
                 .preco(dto.getPreco())
                 .build();
     }
@@ -24,7 +24,7 @@ public class ProdutoMapper {
                 .nome(model.getNome())
                 .descricao(model.getDescricao())
                 .categoria(model.getCategoria())
-                .unidadeDeMedida(model.getUnidadeDeMedida())
+                .unidadeMedida(model.getUnidadeMedida())
                 .preco(model.getPreco())
                 .build();
     }
