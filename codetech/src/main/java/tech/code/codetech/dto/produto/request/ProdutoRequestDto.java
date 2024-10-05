@@ -4,6 +4,7 @@ import jakarta.validation.constraints.*;
 import lombok.Builder;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 
@@ -32,5 +33,5 @@ public class ProdutoRequestDto { //Front -> Backend
 
     @NotNull
     @Positive
-    private Double preco;
+    private BigDecimal preco;
 }
