@@ -47,13 +47,13 @@ public class ListaProdutoController {
     }
 
     @PostMapping
-    public ResponseEntity<ListaProdutoResponseDto> post(@RequestBody @Valid ListaProdutoRequestDto dto){
-        ListaProduto listaSalva = listaProdutoService.save(ListaProdutoMapper.toModel(dto));
+    public ResponseEntity<List<ListaProdutoResponseDto>> post(@RequestBody @Valid ListaProdutoRequestDto dto){
+        List<ListaProduto> listaSalva = listaProdutoService.saveAll(ListaProdutoMapper.toModel(dto));
         return ResponseEntity.status(201).body(ListaProdutoMapper.toResponseDto(listaSalva));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ListaProdutoResponseDto> atualizar(@PathVariable int id, @RequestBody @Valid ListaProdutoRequestDto listaAtualizada){
+    public ResponseEntity<List<ListaProdutoResponseDto>> atualizar(@PathVariable int id, @RequestBody @Valid ListaProdutoRequestDto listaAtualizada){
 
         if(Objects.isNull(id) || id <= 0){
             return ResponseEntity.status(404).build();
@@ -61,7 +61,7 @@ public class ListaProdutoController {
             return ResponseEntity.status(400).build();
         }
 
-        ListaProduto listaExiste = listaProdutoService.update(id, ListaProdutoMapper.toModel(listaAtualizada));
+        List<ListaProduto> listaExiste = listaProdutoService.update(id, ListaProdutoMapper.toModel(listaAtualizada));
 
         if(Objects.isNull(listaExiste)){
             return ResponseEntity.status(404).build();
