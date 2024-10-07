@@ -72,4 +72,17 @@ public class ProdutoService implements ProdutoInterface {
             produto.setQuantidade(produto.getQuantidade() - listaProduto.getQuantidadeProdutos());
         }
     }
+
+    public double precoTotal(int contador) {
+        List<Produto> produtos = productRepository.findAll();
+
+        if (contador >= produtos.size()) {
+            return 0.0;
+        }
+
+        double valor = produtos.get(contador).getPreco();
+        return valor + precoTotal(contador + 1);
+    }
+
+
 }
