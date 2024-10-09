@@ -8,6 +8,8 @@ import tech.code.codetech.model.Produto;
 import tech.code.codetech.repository.ProdutoRepository;
 import tech.code.codetech.strategy.ListaProdutoInterface;
 import tech.code.codetech.strategy.ProdutoInterface;
+
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -72,4 +74,19 @@ public class ProdutoService implements ProdutoInterface {
             produto.setQuantidade(produto.getQuantidade() - listaProduto.getQuantidadeProdutos());
         }
     }
+
+    public BigDecimal precoTotal(int contador) {
+        List<Produto> produtos = productRepository.findAll();
+
+        if (contador >= produtos.size()) {
+            return BigDecimal.valueOf(0.0);
+        }
+
+        BigDecimal valor = produtos.get(contador).getPreco();
+        return valor.add(precoTotal(contador + 1));
+        
+//        return valor + precoTotal(contador + 1);
+    }
+
+
 }
