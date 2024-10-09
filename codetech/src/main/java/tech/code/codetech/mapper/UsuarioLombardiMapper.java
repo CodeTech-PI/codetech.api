@@ -3,6 +3,7 @@ package tech.code.codetech.mapper;
 import tech.code.codetech.dto.lombardi.request.LombardiRequestDto;
 import tech.code.codetech.dto.lombardi.response.LombardiResponseDto;
 import tech.code.codetech.model.UsuarioLombardi;
+import tech.code.codetech.service.autenticacao.dto.UsuarioTokenDto;
 
 public class UsuarioLombardiMapper {
 
@@ -31,5 +32,16 @@ public class UsuarioLombardiMapper {
         usuarioLombardi.setSenha(lombardiRequestDto.getSenha());
 
         return usuarioLombardi;
+    }
+
+    public static UsuarioTokenDto of(UsuarioLombardi usuarioLombardi, String token){
+        UsuarioTokenDto usuarioTokenDto = new UsuarioTokenDto();
+
+        usuarioTokenDto.setUserId(usuarioLombardi.getId());
+        usuarioTokenDto.setEmail(usuarioLombardi.getEmail());
+        usuarioTokenDto.setNome(usuarioLombardi.getNome());
+        usuarioTokenDto.setToken(token);
+
+        return usuarioTokenDto;
     }
 }
