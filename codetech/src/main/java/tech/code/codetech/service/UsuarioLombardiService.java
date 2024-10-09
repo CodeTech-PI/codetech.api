@@ -42,4 +42,6 @@ public class UsuarioLombardiService implements UsuarioLombardiInterface {
     public UsuarioLombardi findByEmailAndSenha(String email, String password){
         return usuarioLombardiRepository.findByEmailAndSenha(email, password);
     }
+
+
 }
