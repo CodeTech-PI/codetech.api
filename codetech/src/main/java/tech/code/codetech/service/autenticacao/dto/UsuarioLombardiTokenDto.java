@@ -1,6 +1,6 @@
 package tech.code.codetech.service.autenticacao.dto;
 
-public class UsuarioTokenDto {
+public class UsuarioLombardiTokenDto {
 
     private Integer userId;
     private String nome;

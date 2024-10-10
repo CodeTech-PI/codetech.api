@@ -9,6 +9,9 @@ import tech.code.codetech.dto.lombardi.response.LombardiResponseDto;
 import tech.code.codetech.mapper.UsuarioLombardiMapper;
 import tech.code.codetech.model.UsuarioLombardi;
 import tech.code.codetech.service.UsuarioLombardiService;
+import tech.code.codetech.service.autenticacao.dto.UsuarioLombardiLoginDto;
+import tech.code.codetech.service.autenticacao.dto.UsuarioLombardiTokenDto;
+
 import java.util.Objects;
 
 @RestController
@@ -35,13 +38,10 @@ public class UsuarioLombardiController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LombardiResponseDto> post(@RequestBody @Valid LombardiResponseDto dto) {
-       UsuarioLombardi usuario = usuarioLombardiService.findByEmailAndSenha(dto.getEmail(), dto.getSenha());
+    public ResponseEntity<UsuarioLombardiTokenDto> post(@RequestBody UsuarioLombardiLoginDto usuarioLombardiLoginDto) {
+        UsuarioLombardiTokenDto usuarioToken = this.usuarioLombardiService.autenticar(usuarioLombardiLoginDto);
 
-        if (usuario == null) {
-            return ResponseEntity.status(404).build();
-        }
-            return ResponseEntity.status(200).body(UsuarioLombardiMapper.toResponseDto(usuario));
+            return ResponseEntity.status(200).body(usuarioToken);
     }
 
     @PutMapping("/{id}")

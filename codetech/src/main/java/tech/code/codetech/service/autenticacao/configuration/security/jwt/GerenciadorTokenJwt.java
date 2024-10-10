@@ -20,7 +20,7 @@ public class GerenciadorTokenJwt {
     @Value("${jwt.validity}")
     private long jwtTokenValidity;
 
-    private String getUsernameFromToken(String token) {
+    public String getUsernameFromToken(String token) {
         return getClaimForToken(token, Claims::getSubject);
     }
 
