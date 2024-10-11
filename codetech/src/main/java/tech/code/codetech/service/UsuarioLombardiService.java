@@ -3,6 +3,7 @@ package tech.code.codetech.service;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,25 +33,30 @@ public class UsuarioLombardiService implements UsuarioLombardiInterface {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    public UsuarioLombardiTokenDto autenticar(UsuarioLombardiLoginDto usuarioLombardiLoginDto){
+    public UsuarioLombardiTokenDto autenticar(UsuarioLombardiLoginDto usuarioLombardiLoginDto) {
         final UsernamePasswordAuthenticationToken credentials = new UsernamePasswordAuthenticationToken(
                 usuarioLombardiLoginDto.getEmail(),
                 usuarioLombardiLoginDto.getSenha()
         );
 
-        final Authentication authentication = this.authenticationManager.authenticate(credentials);
+        try {
+            final Authentication authentication = this.authenticationManager.authenticate(credentials);
 
-        UsuarioLombardi usuarioLombardiAutenticado =
-                usuarioLombardiRepository.findByEmail(usuarioLombardiLoginDto.getEmail())
-                        .orElseThrow(
-                                () -> new ResponseStatusException(404, "Email do usuário não cadastrado", null)
-                        );
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+            UsuarioLombardi usuarioLombardiAutenticado =
+                    usuarioLombardiRepository.findByEmail(usuarioLombardiLoginDto.getEmail())
+                            .orElseThrow(
+                                    () -> new ResponseStatusException(404, "Email do usuário não cadastrado", null)
+                            );
 
-        final String token = gerenciadorTokenJwt.generateToken(authentication);
-        return UsuarioLombardiMapper.of(usuarioLombardiAutenticado, token);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
 
+            final String token = gerenciadorTokenJwt.generateToken(authentication);
+            return UsuarioLombardiMapper.of(usuarioLombardiAutenticado, token);
+        } catch (BadCredentialsException e) {
+            throw new ResponseStatusException(401, "Usuário ou senha inválidos", e);
+        }
     }
+
 
     @Transactional
     public UsuarioLombardi save(UsuarioLombardi usuarioLombardi) {

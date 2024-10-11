@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import tech.code.codetech.dto.lombardi.request.LombardiRequestDto;
 import tech.code.codetech.dto.lombardi.response.LombardiResponseDto;
 import tech.code.codetech.mapper.UsuarioLombardiMapper;
@@ -39,10 +40,14 @@ public class UsuarioLombardiController {
 
     @PostMapping("/login")
     public ResponseEntity<UsuarioLombardiTokenDto> post(@RequestBody UsuarioLombardiLoginDto usuarioLombardiLoginDto) {
-        UsuarioLombardiTokenDto usuarioToken = this.usuarioLombardiService.autenticar(usuarioLombardiLoginDto);
-
+        try {
+            UsuarioLombardiTokenDto usuarioToken = this.usuarioLombardiService.autenticar(usuarioLombardiLoginDto);
             return ResponseEntity.status(200).body(usuarioToken);
+        } catch (ResponseStatusException ex) {
+            return ResponseEntity.status(ex.getStatusCode()).body(null);
+        }
     }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<LombardiResponseDto> atualizar(@PathVariable Integer id, @RequestBody @Valid LombardiRequestDto lombardiAtualizado){

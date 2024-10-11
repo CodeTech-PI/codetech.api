@@ -8,6 +8,8 @@ import java.util.Collection;
 import java.util.List;
 
 public class UsuarioLombardiDetalhesDto implements UserDetails {
+// UserDetails é uma interface
+// Responsável por encapsular dados
 
     private String email;
     private String senha;
@@ -19,38 +21,43 @@ public class UsuarioLombardiDetalhesDto implements UserDetails {
         this.nome = usuarioLombardi.getNome();
     }
 
+    //Retorna as permissões do usuuário
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return null;
     }
 
     @Override
     public String getPassword() {
-        return "";
+        return senha;
     }
 
     @Override
     public String getUsername() {
-        return "";
+        return email;
     }
 
+    //Indica se a conta do usuário foi expirada ou não
     @Override
     public boolean isAccountNonExpired() {
-        return UserDetails.super.isAccountNonExpired();
+        return true;
     }
 
+    //Indica se a conta foi bloqueada
     @Override
     public boolean isAccountNonLocked() {
-        return UserDetails.super.isAccountNonLocked();
+        return true;
     }
 
+    //Indica se as credenciais do usuário (senha) não estão expiradas
     @Override
     public boolean isCredentialsNonExpired() {
-        return UserDetails.super.isCredentialsNonExpired();
+        return true;
     }
 
+    //Indica se a conta do usuário está habilitada
     @Override
     public boolean isEnabled() {
-        return UserDetails.super.isEnabled();
+        return true;
     }
 }

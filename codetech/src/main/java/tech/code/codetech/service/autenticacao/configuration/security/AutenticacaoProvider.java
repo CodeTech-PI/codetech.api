@@ -10,6 +10,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import tech.code.codetech.service.autenticacao.AutenticacaoService;
 
 public class AutenticacaoProvider implements AuthenticationProvider {
+// Define como realizar a autenticação
+// Responsável por validar as credenciais
 
     private final AutenticacaoService usuarioAutorizacaoService;
     private final PasswordEncoder passwordEncoder;
@@ -21,13 +23,18 @@ public class AutenticacaoProvider implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(final Authentication authentication) throws AuthenticationException {
+    //Recebe um objeto que contém o nome de usuário e a senha.
+
         final String username = authentication.getName();
         final String passwprd = authentication.getCredentials().toString();
 
-        UserDetails userDetails = this.usuarioAutorizacaoService.loadUserByUsername(username);
+        UserDetails detalhesDoUsuario = this.usuarioAutorizacaoService.loadUserByUsername(username);
 
-        if (this.passwordEncoder.matches(passwprd, userDetails.getPassword())){
-            return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        // A senha do usuario é igual a senha pega pelo Authentication
+        if (this.passwordEncoder.matches(passwprd, detalhesDoUsuario.getPassword())){
+
+            //Cria um usuário autenticado
+            return new UsernamePasswordAuthenticationToken(detalhesDoUsuario, null, detalhesDoUsuario.getAuthorities());
         } else {
             throw new BadCredentialsException("Usuário ou senha inválidos");
         }

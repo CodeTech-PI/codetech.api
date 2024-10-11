@@ -13,11 +13,13 @@ import java.util.Optional;
 
 @Service
 public class AutenticacaoService implements UserDetailsService {
+// UserDetailsService é uma interface
+// Responsável por carregar informações do usuário durante o processo de autenticação
 
     @Autowired
     private UsuarioLombardiRepository usuarioLombardiRepository;
 
-
+// Verifica se o email existe no banco e exibe as informações
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<UsuarioLombardi> usuarioLombardiOptional = usuarioLombardiRepository.findByEmail(username);

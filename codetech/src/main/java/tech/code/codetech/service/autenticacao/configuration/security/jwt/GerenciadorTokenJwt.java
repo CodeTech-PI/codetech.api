@@ -7,15 +7,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
-
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-//@Component
+
 public class GerenciadorTokenJwt {
 
     @Value("${jwt.secret}")
@@ -28,10 +26,12 @@ public class GerenciadorTokenJwt {
         return getClaimForToken(token, Claims::getSubject);
     }
 
+    // Pega data de expiração do token
     private Date getExpirationDateFromToken(String token) {
         return getClaimForToken(token, Claims::getExpiration);
     }
 
+    // Gera o token
     public String generateToken(final Authentication authentication) {
         final String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
@@ -50,6 +50,7 @@ public class GerenciadorTokenJwt {
         return claimsResolver.apply(claims);
     }
 
+    // Compara a data de expliração do token com a data atual
     public boolean validateToken(String token, UserDetails userDetails) {
         String username = getUsernameFromToken(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
