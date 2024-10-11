@@ -27,4 +27,6 @@ public class AutenticacaoService implements UserDetailsService {
         }
         return new UsuarioLombardiDetalhesDto(usuarioLombardiOptional.get());
     }
+
+
 }
