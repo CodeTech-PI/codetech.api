@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import tech.code.codetech.dto.lista.request.ListaProdutoAtualizacaoRequestDto;
 import tech.code.codetech.dto.lista.request.ListaProdutoRequestDto;
 import tech.code.codetech.dto.lista.response.ListaProdutoResponseDto;
 import tech.code.codetech.mapper.ListaProdutoMapper;
@@ -52,19 +53,13 @@ public class ListaProdutoController {
         return ResponseEntity.status(201).body(ListaProdutoMapper.toResponseDto(listaSalva));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<List<ListaProdutoResponseDto>> atualizar(@PathVariable int id, @RequestBody @Valid ListaProdutoRequestDto listaAtualizada){
+    @PutMapping
+    public ResponseEntity<List<ListaProdutoResponseDto>> atualizar(@RequestBody @Valid ListaProdutoAtualizacaoRequestDto listaAtualizada){
 
-        if(Objects.isNull(id) || id <= 0){
-            return ResponseEntity.status(404).build();
-        } else if(Objects.isNull(listaAtualizada)){
+        List<ListaProduto> listaExiste = listaProdutoService.update(ListaProdutoMapper.toModel(listaAtualizada));
+
+        if(listaExiste.isEmpty()){
             return ResponseEntity.status(400).build();
-        }
-
-        List<ListaProduto> listaExiste = listaProdutoService.update(id, ListaProdutoMapper.toModel(listaAtualizada));
-
-        if(Objects.isNull(listaExiste)){
-            return ResponseEntity.status(404).build();
         }
 
         return ResponseEntity.status(200).body(ListaProdutoMapper.toResponseDto(listaExiste));
