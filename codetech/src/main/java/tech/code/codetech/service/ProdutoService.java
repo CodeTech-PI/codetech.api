@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import tech.code.codetech.model.ListaProduto;
 import tech.code.codetech.model.Produto;
 import tech.code.codetech.repository.ProdutoRepository;
+import tech.code.codetech.strategy.CategoriaInterface;
 import tech.code.codetech.strategy.ListaProdutoInterface;
 import tech.code.codetech.strategy.ProdutoInterface;
 
@@ -20,6 +21,9 @@ public class ProdutoService implements ProdutoInterface {
 
     @Autowired
     private ListaProdutoInterface listaProdutoService;
+
+    @Autowired
+    private CategoriaInterface categoriaInterface;
 
     @Override
     public <E extends Comparable<E>> List<E> ordenar(List<E> lista) {
@@ -36,7 +40,8 @@ public class ProdutoService implements ProdutoInterface {
     }
 
     @Transactional // Garante integridade dos dados (rollback)
-    public Produto save(Produto produto){
+    public Produto save(Produto produto){ //, Integer categoriaId
+//        produto.setCategoria(categoriaInterface.findById(categoriaId));
         return productRepository.save(produto);
     }
 

@@ -92,7 +92,7 @@ public class UnidadeController {
     })
     @PostMapping
     public ResponseEntity<UnidadeResponseDto> post(@RequestBody @Valid UnidadeRequestDto dto) {
-        Unidade unidade = UnidadeMapper.toModel(dto);
+        Unidade unidade = unidadeService.save(UnidadeMapper.toModel(dto));
         return ResponseEntity.status(201).body(UnidadeMapper.toResponseDto(unidade));
     }
     @Operation(summary = "", description = """

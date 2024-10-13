@@ -1,9 +1,6 @@
 package tech.code.codetech.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
@@ -12,6 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "endereco")
 public class Unidade {
 
     @Id
@@ -23,6 +21,6 @@ public class Unidade {
     private String cidade;
     private String estado;
     private String complemento;
-    private Integer numero;
+    private Integer num;
 
 }

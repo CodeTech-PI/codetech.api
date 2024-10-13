@@ -33,5 +33,5 @@ public class UnidadeRequestDto {
     private String complemento;
 
     @NotNull
-    private Integer numero;
+    private Integer num;
 }

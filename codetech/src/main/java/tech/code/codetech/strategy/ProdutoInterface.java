@@ -6,7 +6,7 @@ import java.util.List;
 public interface ProdutoInterface extends Ordenavel {
     @Override
     <E extends Comparable<E>> List<E> ordenar(List<E> lista);
-    Produto save(Produto produto);
+    Produto save(Produto produto); //, Integer categoriaId
     List<Produto> findAll();
     Produto findById(Integer id);
     Produto update(Integer id, Produto product);

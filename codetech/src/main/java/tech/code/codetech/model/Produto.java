@@ -20,9 +20,11 @@ public class Produto implements Comparable<Produto> {
     private Integer quantidade;
     private String nome;
     private String descricao;
-    private String categoria;
     private String unidadeMedida;
     private BigDecimal preco;
+
+    @ManyToOne
+    private Categoria categoria;
 
     @Override
     public int compareTo(Produto o) {

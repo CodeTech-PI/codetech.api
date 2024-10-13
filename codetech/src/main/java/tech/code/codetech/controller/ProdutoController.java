@@ -99,7 +99,7 @@ public class    ProdutoController {
     })
     @PostMapping
     public ResponseEntity<ProdutoResponseDto> post(@RequestBody @Valid ProdutoRequestDto dto){
-        Produto productSaved = productService.save(ProdutoMapper.toModel(dto));
+        Produto productSaved = productService.save(ProdutoMapper.toModel(dto)); //, dto.getCategoriaId()
         return ResponseEntity.status(201).body(ProdutoMapper.toResponseDto(productSaved));
     }
     @Operation(summary = "", description = """

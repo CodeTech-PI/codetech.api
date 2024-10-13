@@ -14,7 +14,7 @@ public class UnidadeMapper {
                 .cidade(dto.getCidade())
                 .estado(dto.getEstado())
                 .complemento(dto.getComplemento())
-                .numero(dto.getNumero())
+                .num(dto.getNum())
                 .build();
     }
 
@@ -27,7 +27,7 @@ public class UnidadeMapper {
                 .cidade(model.getCidade())
                 .estado(model.getEstado())
                 .complemento(model.getComplemento())
-                .numero(model.getNumero())
+                .num(model.getNum())
                 .build();
     }
 }

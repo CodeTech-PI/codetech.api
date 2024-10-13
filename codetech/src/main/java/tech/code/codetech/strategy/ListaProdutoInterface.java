@@ -10,7 +10,7 @@ public interface ListaProdutoInterface {
 
    ListaProduto findById(Integer id);
 
-   List<ListaProduto> update(Integer id, List<ListaProduto> listaProduto);
+   List<ListaProduto> update(List<ListaProduto> listaProduto);
 
    boolean delete(Integer id);
 

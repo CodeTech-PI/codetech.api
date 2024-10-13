@@ -1,8 +1,13 @@
 package tech.code.codetech.service;
 
 import jakarta.transaction.Transactional;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.HttpResponseException;
+import org.apache.http.protocol.HTTP;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
+import tech.code.codetech.exception.NaoEncontradoException;
 import tech.code.codetech.model.ListaProduto;
 import tech.code.codetech.repository.ListaProdutoRepository;
 import tech.code.codetech.strategy.ListaProdutoInterface;
@@ -27,18 +32,17 @@ public class ListaProdutoService implements ListaProdutoInterface {
         return listaProdutoRepository.findAll();
     }
 
-    public List<ListaProduto> update(Integer id, List<ListaProduto> listaProduto){
-        if(!listaProdutoRepository.existsById(id)){
-            return null;
+    public List<ListaProduto> update(List<ListaProduto> listaProduto){
+        for (ListaProduto produto : listaProduto) {
+            if(!existePorId(produto.getId())){
+                throw new NaoEncontradoException("Lista Produto");
+            }
         }
-        definirId(id, listaProduto);
         return saveAll(listaProduto);
     }
 
-    private void definirId(Integer id, List<ListaProduto> listaProduto) {
-        for (ListaProduto produto : listaProduto) {
-            produto.setId(id);
-        }
+    private boolean existePorId(Integer id){
+        return listaProdutoRepository.existsById(id);
     }
 
     public boolean delete(Integer id){
