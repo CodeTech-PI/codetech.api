@@ -14,5 +14,5 @@ public class UnidadeResponseDto {
     private String cidade;
     private String estado;
     private String complemento;
-    private Integer numero;
+    private Integer num;
 }
