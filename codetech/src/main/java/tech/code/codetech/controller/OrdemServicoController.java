@@ -31,56 +31,56 @@ public class OrdemServicoController {
     @Autowired
     private OrdemServicoInterface ordemServicoService;
 
-//    @Operation(summary = "", description = """
-//            # Listar todas as ordens de serviço
-//            ---
-//            Lista todas as ordens de serviço no banco de dados
-//            """)
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", description = "OK",
-//                    content = @Content(
-//                            mediaType = "application/json",
-//                            schema = @Schema(implementation = ProdutoResponseDto.class)
-//                    )
-//            )
-//    })
-//    @GetMapping
-//    public ResponseEntity<List<OrdemServicoResponseDto>> listar(){
-//        List<OrdemServico> listOrdemServico = ordemServicoService.findAll();
-//
-//        if(listOrdemServico.isEmpty()){
-//            return ResponseEntity.status(204).build();
-//        }
-//        List<OrdemServicoResponseDto> resposta = new ArrayList<>();
-//
-//        for (OrdemServico ordemServico : listOrdemServico) {
-//            resposta.add(OrdemServicoMapper.toResponseDto(ordemServico));
-//        }
-//        return ResponseEntity.status(200).body(resposta);
-//    }
-//    @Operation(summary = "", description = """
-//            # Buscar uma ordem de serviço por id
-//            ---
-//            Retorna uma ordem de serviço por id específico
-//            """)
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", description = "OK",
-//                    content = @Content(
-//                            mediaType = "application/json",
-//                            schema = @Schema(implementation = ProdutoResponseDto.class)
-//                    )
-//            )
-//    })
-//    @GetMapping("/{id}")
-//    public ResponseEntity<OrdemServicoResponseDto> encontrarPorId(@PathVariable int id){
-//        OrdemServico ordemServicoEncontrada = ordemServicoService.findById(id);
-//
-//        if(Objects.isNull(ordemServicoEncontrada)){
-//            return ResponseEntity.status(404).build();
-//        }
-//
-//        return ResponseEntity.status(200).body(OrdemServicoMapper.toResponseDto(ordemServicoEncontrada));
-//    }
+    @Operation(summary = "", description = """
+            # Listar todas as ordens de serviço
+            ---
+            Lista todas as ordens de serviço no banco de dados
+            """)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ProdutoResponseDto.class)
+                    )
+            )
+    })
+    @GetMapping
+    public ResponseEntity<List<OrdemServicoResponseDto>> listar(){
+        List<OrdemServico> listOrdemServico = ordemServicoService.findAll();
+
+        if(listOrdemServico.isEmpty()){
+            return ResponseEntity.status(204).build();
+        }
+        List<OrdemServicoResponseDto> resposta = new ArrayList<>();
+
+        for (OrdemServico ordemServico : listOrdemServico) {
+            resposta.add(OrdemServicoMapper.toResponseDto(ordemServico));
+        }
+        return ResponseEntity.status(200).body(resposta);
+    }
+    @Operation(summary = "", description = """
+            # Buscar uma ordem de serviço por id
+            ---
+            Retorna uma ordem de serviço por id específico
+            """)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ProdutoResponseDto.class)
+                    )
+            )
+    })
+    @GetMapping("/{id}")
+    public ResponseEntity<OrdemServicoResponseDto> encontrarPorId(@PathVariable int id){
+        OrdemServico ordemServicoEncontrada = ordemServicoService.findById(id);
+
+        if(Objects.isNull(ordemServicoEncontrada)){
+            return ResponseEntity.status(404).build();
+        }
+
+        return ResponseEntity.status(200).body(OrdemServicoMapper.toResponseDto(ordemServicoEncontrada));
+    }
     @Operation(summary = "", description = """
             # Criar uma ordem de serviço
             ---
@@ -130,28 +130,28 @@ public class OrdemServicoController {
 //
 //        return ResponseEntity.status(200).body(OrdemServicoMapper.toResponseDto(ordemServicoExiste));
 //    }
-    @Operation(summary = "", description = """
-            # Deletar uma ordem de serviço
-            ---
-            Deleta uma ordem de serviço por id específico
-            """)
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "No Content",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ProdutoResponseDto.class)
-                    )
-            )
-    })
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable int id){
-        if(Objects.isNull(id) || id <= 0){
-            return ResponseEntity.status(404).build();
-        }
-        boolean isDeleted = ordemServicoService.delete(id);
-        if(!isDeleted){
-            return ResponseEntity.status(404).build();
-        }
-        return ResponseEntity.status(204).build();
-    }
+//    @Operation(summary = "", description = """
+//            # Deletar uma ordem de serviço
+//            ---
+//            Deleta uma ordem de serviço por id específico
+//            """)
+//    @ApiResponses(value = {
+//            @ApiResponse(responseCode = "204", description = "No Content",
+//                    content = @Content(
+//                            mediaType = "application/json",
+//                            schema = @Schema(implementation = ProdutoResponseDto.class)
+//                    )
+//            )
+//    })
+//    @DeleteMapping("/{id}")
+//    public ResponseEntity<Void> deletar(@PathVariable int id){
+//        if(Objects.isNull(id) || id <= 0){
+//            return ResponseEntity.status(404).build();
+//        }
+//        boolean isDeleted = ordemServicoService.delete(id);
+//        if(!isDeleted){
+//            return ResponseEntity.status(404).build();
+//        }
+//        return ResponseEntity.status(204).build();
+//    }
 }

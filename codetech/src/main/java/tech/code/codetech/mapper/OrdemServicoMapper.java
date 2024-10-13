@@ -22,4 +22,12 @@ public class OrdemServicoMapper {
                     .lucro(dto.getLucro())
                     .build();
         }
+
+        public static OrdemServicoResponseDto toResponseDto(OrdemServico ordemServico){
+            return OrdemServicoResponseDto.builder()
+                    .id(ordemServico.getId())
+                    .valorTatuagem(ordemServico.getValorTatuagem())
+                    .agendamento(ordemServico.getAgendamento())
+                    .build();
+        }
 }
