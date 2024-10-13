@@ -3,6 +3,7 @@ package tech.code.codetech.dto.produto.request;
 import jakarta.validation.constraints.*;
 import lombok.Builder;
 import lombok.Data;
+import tech.code.codetech.model.Categoria;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -25,13 +26,11 @@ public class ProdutoRequestDto { //Front -> Backend
     private String descricao;
 
     @NotBlank
-    @Size(max = 30)
-    private String categoria;
-
-    @NotBlank
     private String unidadeMedida;
 
     @NotNull
     @Positive
     private BigDecimal preco;
+
+    private Categoria categoria;
 }
