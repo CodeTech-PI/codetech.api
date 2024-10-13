@@ -91,6 +91,17 @@ public class AgendamentoController {
     })
     @PostMapping
     public ResponseEntity<AgendamentoResponseDto> agendar(@RequestBody @Valid AgendamentoRequestDto agendamento) {
+        List<Agendamento> agendamentosExistentes = agendamentoService.findAll();
+
+        for (Agendamento agendamentoExistente : agendamentosExistentes) {
+            boolean existeAgendamentoNaData = agendamentoExistente.getDt().equals(agendamento.getDt());
+            boolean existeAgendamentoNaHora = agendamentoExistente.getHorario().equals(agendamento.getHorario());
+
+            if (existeAgendamentoNaData && existeAgendamentoNaHora) {
+                return ResponseEntity.status(409).build();
+            }
+        }
+
         Agendamento agendamentoConcluido = agendamentoService.save(AgendamentoMapper.toModel(agendamento));
         return ResponseEntity.status(201).body(AgendamentoMapper.toResponseDto(agendamentoConcluido));
     }
