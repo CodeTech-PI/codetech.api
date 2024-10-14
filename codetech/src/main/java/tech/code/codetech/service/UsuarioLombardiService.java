@@ -1,6 +1,7 @@
 package tech.code.codetech.service;
 
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -10,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import tech.code.codetech.dto.lombardi.request.LombardiRequestDto;
 import tech.code.codetech.mapper.UsuarioLombardiMapper;
 import tech.code.codetech.model.UsuarioLombardi;
 import tech.code.codetech.repository.UsuarioLombardiRepository;
@@ -68,8 +70,6 @@ public class UsuarioLombardiService implements UsuarioLombardiInterface {
             return null;
         }
         usuarioLombardi.setId(id);
-        String senhaCriptografada = passwordEncoder.encode(usuarioLombardi.getSenha());
-        usuarioLombardi.setSenha(senhaCriptografada);
 
         return usuarioLombardiRepository.save(usuarioLombardi);
     }
@@ -89,5 +89,14 @@ public class UsuarioLombardiService implements UsuarioLombardiInterface {
 
     public UsuarioLombardi findByEmailAndSenha(String email, String password) {
         return usuarioLombardiRepository.findByEmailAndSenha(email, password);
+    }
+
+    public void criar(LombardiRequestDto usuarioLombardiDto) {
+        final UsuarioLombardi novoUsuarioLombardi = UsuarioLombardiMapper.of(usuarioLombardiDto);
+
+        String senhaCriptografada = passwordEncoder.encode(usuarioLombardiDto.getSenha());
+        usuarioLombardiDto.setSenha(senhaCriptografada);
+
+        this.usuarioLombardiRepository.save(novoUsuarioLombardi);
     }
 }

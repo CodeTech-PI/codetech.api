@@ -2,6 +2,7 @@ package tech.code.codetech.service.autenticacao.configuration.security.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -15,7 +16,7 @@ import java.util.Date;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-@Component
+
 public class GerenciadorTokenJwt {
 
     @Value("${jwt.secret}")
@@ -41,9 +42,10 @@ public class GerenciadorTokenJwt {
 
         return Jwts.builder()
                 .setSubject(authentication.getName())
-                .signWith(parseSecret())
+                .claim("roles", authorities) // Adiciona as roles (autoridades)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + jwtTokenValidity * 1_000))
+                .signWith(parseSecret(), SignatureAlgorithm.HS256) // Inclui o algoritmo de assinatura
                 .compact();
     }
 
