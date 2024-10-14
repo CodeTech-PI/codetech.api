@@ -22,4 +22,14 @@ public class UsuarioLombardiMapper {
                 .nome(model.getNome())
                 .build();
     }
+
+    public static UsuarioLombardi of(LombardiRequestDto lombardiCriacaoDto){
+        UsuarioLombardi usuarioLombardi = new UsuarioLombardi();
+
+        usuarioLombardi.setNome(lombardiCriacaoDto.getNome());
+        usuarioLombardi.setEmail(lombardiCriacaoDto.getEmail());
+        usuarioLombardi.setSenha(lombardiCriacaoDto.getSenha());
+
+        return usuarioLombardi;
+    }
 }

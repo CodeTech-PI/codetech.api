@@ -12,11 +12,10 @@ public class LombardiRequestDto {
 
     @NotBlank
     @Email
-    @Size(max = 100)
     private String email;
 
     @NotBlank
-    @Size(max = 30)
+    @Size(min = 6)
     private String senha;
 
     @NotBlank

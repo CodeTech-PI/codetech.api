@@ -3,6 +3,9 @@ package tech.code.codetech.service;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tech.code.codetech.dto.lombardi.request.LombardiRequestDto;
+import tech.code.codetech.mapper.UsuarioLombardiMapper;
+import tech.code.codetech.model.Usuario;
 import tech.code.codetech.model.UsuarioLombardi;
 import tech.code.codetech.repository.UsuarioLombardiRepository;
 import tech.code.codetech.strategy.UsuarioLombardiInterface;
@@ -16,6 +19,13 @@ public class UsuarioLombardiService implements UsuarioLombardiInterface {
     @Transactional
     public UsuarioLombardi save(UsuarioLombardi usuarioLombardi){
        return usuarioLombardiRepository.save(usuarioLombardi);
+    }
+
+    @Transactional
+    public void criar(LombardiRequestDto lombardiCriacaoDto){
+        final UsuarioLombardi novoUsuario = UsuarioLombardiMapper.of(lombardiCriacaoDto);
+
+        this.usuarioLombardiRepository.save(novoUsuario);
     }
 
     public UsuarioLombardi update(Integer id, UsuarioLombardi usuarioLombardi){

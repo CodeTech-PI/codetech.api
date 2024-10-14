@@ -1,6 +1,8 @@
 package tech.code.codetech.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,11 +30,19 @@ public class UsuarioLombardiController {
         return ResponseEntity.status(200).body(UsuarioLombardiMapper.toResponseDto(usuarioLombardi));
     }
 
+//    @PostMapping
+//    public ResponseEntity<UsuarioLombardi> save(@RequestBody @Valid UsuarioLombardi usuarioLombardi){
+//         usuarioLombardi.setId(null);
+//        return ResponseEntity.status(201).body(usuarioLombardiService.save(usuarioLombardi));
+//    }
+
     @PostMapping
-    public ResponseEntity<UsuarioLombardi> save(@RequestBody @Valid UsuarioLombardi usuarioLombardi){
-         usuarioLombardi.setId(null);
-        return ResponseEntity.status(201).body(usuarioLombardiService.save(usuarioLombardi));
+    @SecurityRequirement(name = "Berer")
+    public ResponseEntity<Void> criar(@RequestBody @Valid LombardiRequestDto lombardiCriacaoDto){
+        this.usuarioLombardiService.criar(lombardiCriacaoDto);
+        return ResponseEntity.status(201).build();
     }
+
 
     @PostMapping("/login")
     public ResponseEntity<LombardiResponseDto> post(@RequestBody @Valid LombardiResponseDto dto) {
