@@ -73,6 +73,8 @@ public class AutenticacaoFilter extends OncePerRequestFilter {
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
                 addUsernameInContext(requisicao, username, jwtToken);
+            } else {
+                resposta.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             }
             filterChain.doFilter(requisicao, resposta);
         }

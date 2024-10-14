@@ -21,6 +21,10 @@ public class UsuarioLombardiDetalhesDto implements UserDetails {
         this.nome = usuarioLombardi.getNome();
     }
 
+    public String getNome(){
+        return nome;
+    }
+
     //Retorna as permissões do usuuário
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
