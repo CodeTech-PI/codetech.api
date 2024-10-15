@@ -1,4 +1,4 @@
-package tech.code.codetech.controller;
+package tech.code.codetech.api.controller;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -19,9 +19,7 @@ public class UsuarioLombardiDetalhesDto implements UserDetails {
         this.senha = usuarioLombardi.getSenha();
     }
 
-    public String getNome() {
-        return nome;
-    }
+    public String getNome() { return nome; }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

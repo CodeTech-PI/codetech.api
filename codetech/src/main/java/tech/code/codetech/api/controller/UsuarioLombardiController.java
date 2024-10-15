@@ -1,4 +1,4 @@
-package tech.code.codetech.controller;
+package tech.code.codetech.api.controller;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -12,6 +12,8 @@ import tech.code.codetech.mapper.UsuarioLombardiMapper;
 import tech.code.codetech.model.UsuarioLombardi;
 import tech.code.codetech.service.UsuarioLombardiService;
 import java.util.Objects;
+import tech.code.codetech.service.autenticacao.dto.UsuarioLombardiTokenDto;
+import tech.code.codetech.service.autenticacao.dto.UsuarioLombardiLoginDto;
 
 @RestController
 @RequestMapping("/lombardi")
@@ -30,14 +32,8 @@ public class UsuarioLombardiController {
         return ResponseEntity.status(200).body(UsuarioLombardiMapper.toResponseDto(usuarioLombardi));
     }
 
-//    @PostMapping
-//    public ResponseEntity<UsuarioLombardi> save(@RequestBody @Valid UsuarioLombardi usuarioLombardi){
-//         usuarioLombardi.setId(null);
-//        return ResponseEntity.status(201).body(usuarioLombardiService.save(usuarioLombardi));
-//    }
-
     @PostMapping
-    @SecurityRequirement(name = "Berer")
+    @SecurityRequirement(name = "Bearer")
     public ResponseEntity<Void> criar(@RequestBody @Valid LombardiRequestDto lombardiCriacaoDto){
         this.usuarioLombardiService.criar(lombardiCriacaoDto);
         return ResponseEntity.status(201).build();
@@ -45,13 +41,13 @@ public class UsuarioLombardiController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<LombardiResponseDto> post(@RequestBody @Valid LombardiResponseDto dto) {
-       UsuarioLombardi usuario = usuarioLombardiService.findByEmailAndSenha(dto.getEmail(), dto.getSenha());
+    public ResponseEntity<UsuarioLombardiTokenDto> login(@RequestBody UsuarioLombardiLoginDto dto) {
+        UsuarioLombardiTokenDto usuarioLombardiTokenDto = this.usuarioLombardiService.autenticar(dto);
 
-        if (usuario == null) {
+        if (usuarioLombardiTokenDto == null) {
             return ResponseEntity.status(404).build();
         }
-            return ResponseEntity.status(200).body(UsuarioLombardiMapper.toResponseDto(usuario));
+            return ResponseEntity.status(200).body(usuarioLombardiTokenDto);
     }
 
     @PutMapping("/{id}")
