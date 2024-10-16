@@ -20,6 +20,7 @@ import tech.code.codetech.service.AgendamentoService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
 @Tag(name = "Agendamento")
 @RestController
 @RequestMapping({"/agendamentos"})
@@ -27,6 +28,7 @@ public class AgendamentoController {
 
     @Autowired
     public AgendamentoService agendamentoService;
+
     @Operation(summary = "", description = """
             # Listar todos os agendamentos
             ---
@@ -40,6 +42,7 @@ public class AgendamentoController {
                     )
             )
     })
+
     @GetMapping
     public ResponseEntity<List<AgendamentoResponseDto>> listar() {
         List<Agendamento> agendamentos = agendamentoService.findAll();

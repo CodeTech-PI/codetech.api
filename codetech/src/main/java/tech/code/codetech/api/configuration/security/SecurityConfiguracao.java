@@ -3,6 +3,7 @@ package tech.code.codetech.api.configuration.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,6 +25,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import tech.code.codetech.api.configuration.security.AutenticacaoEntryPoint;
 
+
 import tech.code.codetech.api.configuration.security.jwt.GerenciadorTokenJwt;
 import tech.code.codetech.service.usuario.autenticacao.AutenticacaoService;
 
@@ -40,6 +42,7 @@ public class SecurityConfiguracao {
 
     @Autowired
     private AutenticacaoEntryPoint autenticacaoJwtEntryPoint;
+
 
     private static final AntPathRequestMatcher[] URLS_PERMITIDAS = {
             new AntPathRequestMatcher("/swagger-ui/**"),
@@ -76,6 +79,7 @@ public class SecurityConfiguracao {
                 .sessionManagement(management -> management
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
+        // Adiciona o filtro JwtAuthFilter
         http.addFilterBefore(jwtAuthenticationFilterBean(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
@@ -95,12 +99,12 @@ public class SecurityConfiguracao {
     }
 
     @Bean
-    public AutenticacaoFilter jwtAuthenticationFilterBean() {
-        return new AutenticacaoFilter(autenticacaoService, jwtAuthenticationUtilBean());
+    public JwtAuthFilter jwtAuthenticationFilterBean() {
+        return new JwtAuthFilter(gerenciadorTokenJwt(), autenticacaoService);
     }
 
     @Bean
-    public GerenciadorTokenJwt jwtAuthenticationUtilBean() {
+    public GerenciadorTokenJwt gerenciadorTokenJwt() {
         return new GerenciadorTokenJwt();
     }
 
