@@ -1,4 +1,4 @@
-package tech.code.codetech.controller;
+package tech.code.codetech.api.controller;
 
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;

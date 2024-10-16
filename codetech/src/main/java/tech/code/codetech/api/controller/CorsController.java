@@ -1,4 +1,4 @@
-package tech.code.codetech.controller;
+package tech.code.codetech.api.controller;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
