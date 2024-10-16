@@ -15,7 +15,6 @@ public class LombardiRequestDto {
     private String email;
 
     @NotBlank
-    @Size(min = 6)
     private String senha;
 
     @NotBlank
