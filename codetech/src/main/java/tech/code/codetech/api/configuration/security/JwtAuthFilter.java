@@ -1,5 +1,6 @@
 package tech.code.codetech.api.configuration.security;
 
+import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,6 +15,7 @@ import tech.code.codetech.api.configuration.security.jwt.GerenciadorTokenJwt;
 import tech.code.codetech.service.usuario.autenticacao.AutenticacaoService;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 import org.springframework.beans.factory.annotation.Value;
 import io.jsonwebtoken.Claims;
@@ -51,11 +53,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             }
 
             try {
-                // Verifica se o token é válido
-                Claims claims = Jwts.parser()
-                        .setSigningKey(jwtSecret) // Usando a chave secreta para validar o token
-                        .parseClaimsJws(token) // Tenta analisar o token
+                Claims claims = Jwts.parserBuilder()
+                        .setSigningKey(Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8)))
+                        .build()
+                        .parseClaimsJws(token)
                         .getBody();
+
 
                 String username = claims.getSubject(); // Obtém o nome de usuário a partir dos claims
 
