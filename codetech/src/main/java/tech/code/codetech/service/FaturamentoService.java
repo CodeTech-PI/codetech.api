@@ -3,6 +3,7 @@ package tech.code.codetech.service;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tech.code.codetech.exception.naoencontrado.FaturamentoNaoEncontradaException;
 import tech.code.codetech.model.Faturamento;
 import tech.code.codetech.model.ListaProduto;
 import tech.code.codetech.model.OrdemServico;
@@ -61,7 +62,21 @@ public class FaturamentoService implements FaturamentoInterface {
 
         BigDecimal lucro = ordemServico.getValorTatuagem().subtract(gastoTotal);
 
-        salvarFaturamento(lucro, ordemServico);
+        salvarFaturamento(lucro, ordemServico, null);
+
+        return lucro;
+    }
+
+    @Override
+    public BigDecimal calcularLucro(OrdemServico ordemServico, Integer id) {
+        List<ListaProduto> listaProdutos = listaProdutoService
+                .buscarListaProdutosPeloAgendamento(ordemServico.getAgendamento().getId());
+
+        BigDecimal gastoTotal = calcularGastoTotal(listaProdutos);
+
+        BigDecimal lucro = ordemServico.getValorTatuagem().subtract(gastoTotal);
+
+        salvarFaturamento(lucro, ordemServico, id);
 
         return lucro;
     }
@@ -79,11 +94,24 @@ public class FaturamentoService implements FaturamentoInterface {
         return gastoTotal;
     }
 
-    private void salvarFaturamento(BigDecimal lucro, OrdemServico ordemServico) {
+    private void salvarFaturamento(BigDecimal lucro, OrdemServico ordemServico, Integer id) {
         Faturamento faturamento = Faturamento.builder()
+                .id(id)
                 .lucro(lucro)
                 .ordemServico(ordemServico)
                 .build();
         save(faturamento);
+    }
+
+    @Override
+    public BigDecimal recalcularLucro(OrdemServico ordemServico) {
+        Faturamento faturamento = buscarPorOrdemServico(ordemServico);
+        return calcularLucro(ordemServico, faturamento.getId());
+    }
+
+    @Override
+    public Faturamento buscarPorOrdemServico(OrdemServico ordemServico) {
+        return faturamentoRepository.findByOrdemServicoId(ordemServico.getId())
+                .orElseThrow(FaturamentoNaoEncontradaException::new);
     }
 }
