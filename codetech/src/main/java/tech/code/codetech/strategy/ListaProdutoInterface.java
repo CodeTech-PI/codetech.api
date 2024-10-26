@@ -15,4 +15,6 @@ public interface ListaProdutoInterface {
    boolean delete(Integer id);
 
    List<ListaProduto> buscarListaProdutosPeloAgendamento(Integer idAgendamento);
+
+   void deleteAll(List<Integer> listaProduto);
 }

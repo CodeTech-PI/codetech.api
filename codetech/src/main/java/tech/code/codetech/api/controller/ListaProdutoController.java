@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tech.code.codetech.dto.lista.request.ListaProdutoAtualizacaoRequestDto;
+import tech.code.codetech.dto.lista.request.ListaProdutoDeleteRequestDto;
 import tech.code.codetech.dto.lista.request.ListaProdutoRequestDto;
 import tech.code.codetech.dto.lista.response.ListaProdutoResponseDto;
 import tech.code.codetech.mapper.ListaProdutoMapper;
@@ -65,15 +66,9 @@ public class ListaProdutoController {
         return ResponseEntity.status(200).body(ListaProdutoMapper.toResponseDto(listaExiste));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable int id){
-        if(Objects.isNull(id) || id <= 0){
-            return ResponseEntity.status(404).build();
-        }
-        boolean isDeleted = listaProdutoService.delete(id);
-        if(!isDeleted){
-            return ResponseEntity.status(404).build();
-        }
+    @DeleteMapping
+    public ResponseEntity<Void> deletar(@RequestBody ListaProdutoDeleteRequestDto listaProdutoDeleteRequestDto){
+        listaProdutoService.deleteAll(listaProdutoDeleteRequestDto.getProdutosIds());
         return ResponseEntity.status(204).build();
     }
 }

@@ -18,4 +18,9 @@ public interface OrdemServicoInterface {
    List<OrdemServico> findAll();
 
     OrdemServicoLucroDto executarOrdemServico(OrdemServico model);
+
+    OrdemServicoLucroDto atualizarOrdemServico(OrdemServico model, Integer id);
+
+    List<OrdemServicoLucroDto> buscarTodos();
+    OrdemServicoLucroDto buscarPorId(Integer id);
 }
