@@ -16,4 +16,11 @@ public interface FaturamentoInterface {
     boolean delete(Integer id);
 
     BigDecimal calcularLucro(OrdemServico ordemServico);
+
+    BigDecimal recalcularLucro(OrdemServico ordemServico);
+
+    BigDecimal calcularLucro(OrdemServico ordemServico, Integer id);
+
+    Faturamento buscarPorOrdemServico (OrdemServico ordemServico);
+
 }
