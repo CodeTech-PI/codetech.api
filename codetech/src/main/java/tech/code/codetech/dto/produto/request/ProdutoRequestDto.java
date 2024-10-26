@@ -32,5 +32,6 @@ public class ProdutoRequestDto { //Front -> Backend
     @Positive
     private BigDecimal preco;
 
+    @NotNull
     private Categoria categoria;
 }
