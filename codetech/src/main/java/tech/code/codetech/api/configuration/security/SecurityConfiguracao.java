@@ -71,6 +71,7 @@ public class SecurityConfiguracao {
             new AntPathRequestMatcher("/error/**")
     };
 
+    
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
