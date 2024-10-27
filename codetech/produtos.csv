@@ -1,0 +1,11 @@
+id; nome; descricao; unidadeMedida; preco; quantidade; categoria
+11; Tinta Preta; Tinta resistente à água; ml; 35,90; 50; Tintas
+12; Tinta Vermelha; Tinta vibrante; ml; 32,50; 30; Tintas
+13; Agulha 7RL; Agulha para linhas finas; unidades; 2,50; 100; Agulhas
+14; Agulha 9RS; Agulha para sombreamento; unidades; 2,80; 80; Agulhas
+15; Biqueira descartável; Biqueira de plástico; unidades; 1,20; 200; Acessórios Descartáveis
+16; Luvas de látex; Luvas descartáveis; unidades; 0,15; 300; Equipamentos de Proteção
+17; Capa de proteção para máquina; Capa descartável para máquina de tatuagem; unidades; 0,50; 150; Acessórios Descartáveis
+18; Sabonete antisséptico; Sabonete para limpeza da pele; ml; 15,00; 40; Produtos de Limpeza
+19; Vaselina sólida; Vaselina para uso durante a tatuagem; g; 12,00; 20; Produtos de Limpeza
+20; Copo de tinta; Copo descartável para tintas; unidades; 0,10; 500; Acessórios Descartáveis
