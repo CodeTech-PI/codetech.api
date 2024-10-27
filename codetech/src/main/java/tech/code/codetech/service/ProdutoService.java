@@ -9,6 +9,7 @@ import tech.code.codetech.repository.ProdutoRepository;
 import tech.code.codetech.strategy.CategoriaInterface;
 import tech.code.codetech.strategy.ListaProdutoInterface;
 import tech.code.codetech.strategy.ProdutoInterface;
+import tech.code.codetech.strategy.escritor.ProdutoEscritor;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -29,7 +30,7 @@ public class ProdutoService implements ProdutoInterface {
     public <E extends Comparable<E>> List<E> ordenar(List<E> lista) {
         for (int i = 0; i < lista.size() - 1; i++) {
             for (int j = i + 1; j < lista.size(); j++) {
-                if(lista.get(j).compareTo(lista.get(i)) < 0){
+                if (lista.get(j).compareTo(lista.get(i)) < 0) {
                     E aux = lista.get(i);
                     lista.set(i, lista.get(j));
                     lista.set(j, aux);
@@ -40,34 +41,35 @@ public class ProdutoService implements ProdutoInterface {
     }
 
     @Transactional // Garante integridade dos dados (rollback)
-    public Produto save(Produto produto){ //, Integer categoriaId
-//        produto.setCategoria(categoriaInterface.findById(categoriaId));
+    public Produto save(Produto produto) {
+        // Integer categoriaId
+        // produto.setCategoria(categoriaInterface.findById(categoriaId));
         return productRepository.save(produto);
     }
 
-    public List<Produto> findAll(){ // Encontra tudo
+    public List<Produto> findAll() { // Encontra tudo
         List<Produto> produtos = productRepository.findAll();
         return ordenar(produtos);
     }
 
-    public Produto findById(Integer id){
+    public Produto findById(Integer id) {
         return productRepository.findById(id).orElse(null);
     }
 
-    public Produto update(Integer id, Produto product){
-        if(!productRepository.existsById(id)){
-           return null;
+    public Produto update(Integer id, Produto product) {
+        if (!productRepository.existsById(id)) {
+            return null;
         }
         product.setId(id);
         return productRepository.save(product);
     }
 
-    public boolean delete(Integer id){
-        if(!productRepository.existsById(id)){
-           return false;
+    public boolean delete(Integer id) {
+        if (!productRepository.existsById(id)) {
+            return false;
         }
-            productRepository.deleteById(id);
-            return true;
+        productRepository.deleteById(id);
+        return true;
     }
 
     @Override
@@ -89,9 +91,13 @@ public class ProdutoService implements ProdutoInterface {
 
         BigDecimal valor = produtos.get(contador).getPreco();
         return valor.add(precoTotal(contador + 1));
-        
+
 //        return valor + precoTotal(contador + 1);
     }
 
+    public void exportarProdutosParaCsv() {
+        List<Produto> produtos = productRepository.findAll();
+        ProdutoEscritor.escreverArquivo(produtos);
+    }
 
 }
