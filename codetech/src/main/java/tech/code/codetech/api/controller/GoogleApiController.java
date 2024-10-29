@@ -39,11 +39,7 @@ public class GoogleApiController {
     private GoogleApiAuthorizationService googleApiAuthorizationService;
 
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
-    @Operation(summary = "", description = """
-            # Criar um evento
-            ---
-            Cria um novo evento na Api Calendar
-            """)
+    @Operation(summary = "Criar um evento", description = "Cria um novo evento na API Calendar")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Created",
                     content = @Content(
@@ -84,11 +80,7 @@ public class GoogleApiController {
     private LocalDateTime dateTimeToLocalDateTime(DateTime dateTime) {
         return LocalDateTime.ofInstant(Instant.ofEpochMilli(dateTime.getValue()), ZoneId.systemDefault());
     }
-    @Operation(summary = "", description = """
-            # Listar todos os eventos
-            ---
-            Lista todos os eventos na Api Calendar
-            """)
+    @Operation(summary = "Listar todos os eventos", description = "Lista todos os eventos na API Calendar")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK",
                     content = @Content(

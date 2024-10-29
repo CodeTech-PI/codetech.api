@@ -29,9 +29,9 @@ public class ProdutoController {
     @Autowired
     private ProdutoService productService;
 
-    @Operation(summary = "", description = """
+    @Operation(summary = "Listar todos os produtos", description = """
             # Listar todos os produtos
-            ---
+            --- 
             Lista todos os produtos cadastrados no estoque
             """)
     @ApiResponses(value = {
@@ -60,9 +60,9 @@ public class ProdutoController {
         return ResponseEntity.status(200).body(resposta);
     }
 
-    @Operation(summary = "", description = """
+    @Operation(summary = "Buscar produto por ID", description = """
             # Buscar produto por id
-            ---
+            --- 
             Retorna um produto por id específico
             """)
     @ApiResponses(value = {
@@ -72,7 +72,7 @@ public class ProdutoController {
                             schema = @Schema(implementation = ProdutoResponseDto.class)
                     )
             ),
-            @ApiResponse(responseCode = "404", description = "Quando não encontra o produto",
+            @ApiResponse(responseCode = "404", description = "O produto não foi encontrado",
                     content = @Content()
             )
     })
@@ -86,13 +86,13 @@ public class ProdutoController {
         return ResponseEntity.status(200).body(ProdutoMapper.toResponseDto(produtoEncontrado));
     }
 
-    @Operation(summary = "", description = """
+    @Operation(summary = "Criar um novo produto", description = """
             # Criar um produto
-            ---
+            --- 
             Cria um novo produto
             """)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Created",
+            @ApiResponse(responseCode = "201", description = "Produto criado com sucesso",
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = ProdutoResponseDto.class)
@@ -105,18 +105,20 @@ public class ProdutoController {
         return ResponseEntity.status(201).body(ProdutoMapper.toResponseDto(productSaved));
     }
 
-    @Operation(summary = "", description = """
+    @Operation(summary = "Atualizar um produto por ID", description = """
             # Atualizar um produto
-            ---
+            --- 
             Atualiza um produto por id específico
             """)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK",
+            @ApiResponse(responseCode = "200", description = "Produto atualizado com sucesso",
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = ProdutoResponseDto.class)
                     )
-            )
+            ),
+            @ApiResponse(responseCode = "404", description = "O produto não foi encontrado", content = @Content()),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos", content = @Content())
     })
     @PutMapping("/{id}")
     public ResponseEntity<ProdutoResponseDto> atualizar(@PathVariable Integer id, @RequestBody @Valid ProdutoRequestDto produtoAtualizado) {
@@ -135,18 +137,16 @@ public class ProdutoController {
         return ResponseEntity.status(200).body(ProdutoMapper.toResponseDto(productExists));
     }
 
-    @Operation(summary = "", description = """
+    @Operation(summary = "Deletar um produto por ID", description = """
             # Deletar um produto
-            ---
+            --- 
             Deleta um produto por id específico
             """)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "No Content",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ProdutoResponseDto.class)
-                    )
-            )
+            @ApiResponse(responseCode = "204", description = "Produto deletado com sucesso",
+                    content = @Content())
+            ,
+            @ApiResponse(responseCode = "404", description = "O produto não foi encontrado", content = @Content())
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Integer id) {
@@ -161,16 +161,16 @@ public class ProdutoController {
         return ResponseEntity.status(204).build();
     }
 
-    @Operation(summary = "", description = """
+    @Operation(summary = "Exportar produtos para CSV", description = """
             # Exportar arquivos dos produtos
-            ---
+            --- 
             Exportar todos os produtos cadastrados no estoque
             """)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Listar todos os produtos",
+            @ApiResponse(responseCode = "200", description = "Produtos exportados com sucesso",
                     content = @Content(
                             mediaType = "application/json",
-                            array = @ArraySchema(schema = @Schema(implementation = ProdutoResponseDto.class))
+                            schema = @Schema(type = "string", example = "Produtos exportados com sucesso para o arquivo produtos.csv")
                     )
             ),
             @ApiResponse(responseCode = "204", description = "Quando não tem produtos cadastrados",

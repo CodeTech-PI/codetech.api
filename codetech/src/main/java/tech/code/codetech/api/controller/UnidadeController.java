@@ -16,9 +16,11 @@ import tech.code.codetech.dto.unidade.response.UnidadeResponseDto;
 import tech.code.codetech.mapper.UnidadeMapper;
 import tech.code.codetech.model.Unidade;
 import tech.code.codetech.service.UnidadeService;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
 @Tag(name = "Unidade")
 @RestController
 @RequestMapping("/unidades")
@@ -27,18 +29,20 @@ public class UnidadeController {
     @Autowired
     private UnidadeService unidadeService;
 
-    @Operation(summary = "", description = """
+    @Operation(summary = "Listar todas as unidades", description = """
             # Listar todas as unidades
             ---
-            Lista todas as undidades no banco de dados
+            Retorna uma lista de todas as unidades registradas no sistema.
+            
             """)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK",
+            @ApiResponse(responseCode = "200", description = "Lista de unidades retornada com sucesso.",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ProdutoResponseDto.class)
+                            schema = @Schema(implementation = UnidadeResponseDto.class)
                     )
-            )
+            ),
+            @ApiResponse(responseCode = "204", description = "Nenhuma unidade encontrada.")
     })
     @GetMapping
     public ResponseEntity<List<UnidadeResponseDto>> listar() {
@@ -55,18 +59,20 @@ public class UnidadeController {
         return ResponseEntity.status(200).body(resposta);
     }
 
-    @Operation(summary = "", description = """
+    @Operation(summary = "Buscar uma unidade", description = """
             # Buscar uma unidade
             ---
-            Retorna uma unidade por id específico
+            Retorna uma unidade pelo ID específico.
+            .
             """)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK",
+            @ApiResponse(responseCode = "200", description = "Unidade encontrada com sucesso.",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ProdutoResponseDto.class)
+                            schema = @Schema(implementation = UnidadeResponseDto.class)
                     )
-            )
+            ),
+            @ApiResponse(responseCode = "404", description = "Unidade não encontrada.")
     })
     @GetMapping("/{id}")
     public ResponseEntity<UnidadeResponseDto> buscarPorId(@PathVariable Integer id) {
@@ -77,40 +83,46 @@ public class UnidadeController {
         }
         return ResponseEntity.status(200).body(UnidadeMapper.toResponseDto(unidade));
     }
-    @Operation(summary = "", description = """
+
+    @Operation(summary = "Criar uma unidade", description = """
             # Criar uma unidade
             ---
-            Cria uma nova unidade no banco de dados
+            Cria uma nova unidade com os dados fornecidos.
+            
             """)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Created",
+            @ApiResponse(responseCode = "201", description = "Unidade criada com sucesso.",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ProdutoResponseDto.class)
+                            schema = @Schema(implementation = UnidadeResponseDto.class)
                     )
-            )
+            ),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos para criação da unidade.")
     })
     @PostMapping
     public ResponseEntity<UnidadeResponseDto> post(@RequestBody @Valid UnidadeRequestDto dto) {
         Unidade unidade = unidadeService.save(UnidadeMapper.toModel(dto));
         return ResponseEntity.status(201).body(UnidadeMapper.toResponseDto(unidade));
     }
-    @Operation(summary = "", description = """
+
+    @Operation(summary = "Atualizar uma unidade", description = """
             # Atualizar uma unidade
             ---
-            Atualiza uma unidade por id específico
+            Atualiza os dados de uma unidade existente pelo ID específico.
+            .
             """)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK",
+            @ApiResponse(responseCode = "200", description = "Unidade atualizada com sucesso.",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ProdutoResponseDto.class)
+                            schema = @Schema(implementation = UnidadeResponseDto.class)
                     )
-            )
+            ),
+            @ApiResponse(responseCode = "404", description = "Unidade não encontrada."),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos para atualização da unidade.")
     })
     @PutMapping("/{id}")
     public ResponseEntity<UnidadeResponseDto> atualizar(@PathVariable Integer id, @RequestBody @Valid UnidadeRequestDto unidadeAtualizada) {
-
         if (Objects.isNull(id) || id <= 0) {
             return ResponseEntity.status(404).build();
         } else if (Objects.isNull(unidadeAtualizada)) {
@@ -124,27 +136,25 @@ public class UnidadeController {
         }
         return ResponseEntity.status(200).body(UnidadeMapper.toResponseDto(unidadeExists));
     }
-    @Operation(summary = "", description = """
+
+    @Operation(summary = "Deletar uma unidade", description = """
             # Deletar uma unidade
             ---
-            Deleta uma unidade por id específico
+            Remove uma unidade do pelo ID específico.
+           
             """)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "No Content",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ProdutoResponseDto.class)
-                    )
-            )
+            @ApiResponse(responseCode = "204", description = "Unidade deletada com sucesso."),
+            @ApiResponse(responseCode = "404", description = "Unidade não encontrada.")
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Integer id) {
-        if(Objects.isNull(id) || id <= 0){
+        if (Objects.isNull(id) || id <= 0) {
             return ResponseEntity.status(404).build();
         }
 
         boolean isDeleted = unidadeService.delete(id);
-        if(!isDeleted){
+        if (!isDeleted) {
             return ResponseEntity.status(404).build();
         }
         return ResponseEntity.status(204).build();
