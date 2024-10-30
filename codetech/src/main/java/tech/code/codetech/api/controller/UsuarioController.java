@@ -51,7 +51,8 @@ public class UsuarioController {
                             array = @ArraySchema(schema = @Schema(implementation = UsuariosResponseDto.class))
                     )
             ),
-            @ApiResponse(responseCode = "204", description = "Nenhum usuário encontrado")
+            @ApiResponse(responseCode = "204", description = "Nenhum usuário encontrado",
+                    content = @Content())
     })
     @GetMapping
     public ResponseEntity<List<UsuariosResponseDto>> listar() {
@@ -169,7 +170,7 @@ public class UsuarioController {
         - 404: Usuário não encontrado, dados inválidos.
         """)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "No Content",
+            @ApiResponse(responseCode = "204", description = "OK",
                     content = @Content()
             ),
             @ApiResponse(responseCode = "404", description = "Usuário não encontrado")

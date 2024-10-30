@@ -154,11 +154,11 @@ public class CategoriaController {
             - Exclui a categoria correspondente ao ID fornecido como parâmetro.
             
             Respostas:
-            - 204: Exclusão realizada com sucesso. Não retorna conteúdo.
+            - 204: OK.
             - 404: Categoria não encontrada para o ID informado.
             """)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Exclusão realizada com sucesso"),
+            @ApiResponse(responseCode = "204", description = "OK"),
             @ApiResponse(responseCode = "404", description = "Categoria não encontrada")
     })
     @DeleteMapping("/{id}")

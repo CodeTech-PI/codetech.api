@@ -19,7 +19,7 @@ public class UsuariosRequestDto {
 
     @NotBlank
     @Size(max = 14)
-    @CPF
+//    @CPF
     private String cpf;
 
     @NotBlank
