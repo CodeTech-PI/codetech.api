@@ -185,6 +185,5 @@ public class UsuarioController {
             return ResponseEntity.status(404).build();
         }
         return ResponseEntity.status(204).build();
-
     }
 }
