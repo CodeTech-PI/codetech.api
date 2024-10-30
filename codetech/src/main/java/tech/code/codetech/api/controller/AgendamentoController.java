@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.persistence.Table;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,21 +23,31 @@ import java.util.Objects;
 
 @Tag(name = "Agendamento")
 @RestController
-@RequestMapping("/agendamentos")
+@RequestMapping({"/agendamentos"})
 public class AgendamentoController {
 
     @Autowired
-    private AgendamentoService agendamentoService;
+    public AgendamentoService agendamentoService;
 
-    @Operation(summary = "Listar todos os agendamentos", description = "Lista todos os agendamentos no banco de dados")
+    //CONFIGURAÇÂO SWAGGER listar()
+    @Operation(summary = "Listar agendamento", description = """
+            Esse endpoint permite a listagem de todos os agendamentos cadastrados no sistema:
+            
+            - Retorna uma lista de objetos representando cada agendamento.
+            
+            Respostas:
+            
+            - 200: Requisição sucedida. Retorna a lista de agendamentos em JSON.
+            - 204: Nenhum agendamento encontrado.
+            """)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK - Lista de agendamentos retornada com sucesso",
+            @ApiResponse(responseCode = "200", description = "OK",
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = AgendamentoResponseDto.class)
                     )
             ),
-            @ApiResponse(responseCode = "204", description = "No Content - Nenhum agendamento encontrado", content = @Content())
+            @ApiResponse(responseCode = "204", description = "Nenhum agendamento encontrado")
     })
     @GetMapping
     public ResponseEntity<List<AgendamentoResponseDto>> listar() {
@@ -53,15 +64,24 @@ public class AgendamentoController {
         return ResponseEntity.status(200).body(resposta);
     }
 
-    @Operation(summary = "Buscar agendamento por id", description = "Retorna um agendamento por id específico")
+    //CONFIGURAÇÂO SWAGGER encontrarPorId()
+    @Operation(summary = "Buscar agendamento por id", description = """
+            Esse endpoint permite buscar um agendamento específico pelo seu ID.
+            
+            - Retorna o objeto `Agendamento` correspondente ao ID fornecido como parâmetro.
+            
+            Respostas:
+            - 200: Requisição sucedida. Retorna o agendamento solicitado em JSON.
+            - 404: Agendamento não encontrado para o ID informado.
+            """)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK - Agendamento encontrado",
+            @ApiResponse(responseCode = "200", description = "OK",
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = AgendamentoResponseDto.class)
                     )
             ),
-            @ApiResponse(responseCode = "404", description = "Not Found - Agendamento não encontrado", content = @Content())
+            @ApiResponse(responseCode = "404", description = "Agendamento não encontrado")
     })
     @GetMapping("/{id}")
     public ResponseEntity<AgendamentoResponseDto> encontrarPorId(@PathVariable Integer id) {
@@ -73,15 +93,25 @@ public class AgendamentoController {
         return ResponseEntity.status(200).body(AgendamentoMapper.toResponseDto(agendamentoEncontrado));
     }
 
-    @Operation(summary = "Criar um agendamento", description = "Cria um novo agendamento no banco de dados")
+    //CONFIGURAÇÂO SWAGGER agendar()
+    @Operation(summary = "Criar novo agendamento", description = """
+            Esse endpoint permite a criação de um novo agendamento no sistema.
+                                                              
+            - Recebe os dados do novo agendamento em um objeto `Agendamento`.
+            - Verifica se já existe um agendamento na mesma data e horário.
+            
+            Respostas:
+            - 201: Agendamento criado com sucesso.
+            - 409: Já existe um agendamento para a data e horário especificados.
+            """)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Created - Agendamento criado com sucesso",
+            @ApiResponse(responseCode = "201", description = "Created",
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = AgendamentoResponseDto.class)
                     )
             ),
-            @ApiResponse(responseCode = "409", description = "Conflict - Conflito de agendamento", content = @Content())
+            @ApiResponse(responseCode = "409", description = "Conflito: já existe um agendamento para a data e horário especificados")
     })
     @PostMapping
     public ResponseEntity<AgendamentoResponseDto> agendar(@RequestBody @Valid AgendamentoRequestDto agendamento) {
@@ -100,20 +130,32 @@ public class AgendamentoController {
         return ResponseEntity.status(201).body(AgendamentoMapper.toResponseDto(agendamentoConcluido));
     }
 
-    @Operation(summary = "Atualizar um agendamento", description = "Atualiza um agendamento por id específico")
+    //CONFIGURAÇÃO SWAGGER remarcar()
+    @Operation(summary = "Atualizar agendamento existente", description = """
+            Esse endpoint permite atualizar os dados de um agendamento existente com base no ID fornecido.
+
+            - Recebe os dados atualizados em um objeto `Agendamento`.
+            - Verifica se o ID é válido e se já existe um agendamento na mesma data e horário.
+            
+            Respostas:
+            - 200: Agendamento atualizado com sucesso.
+            - 400: Dados inválidos para atualização.
+            - 404: Agendamento não encontrado para o ID especificado.
+            - 409: Conflito, já existe um agendamento para a data e horário especificados.
+            """)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK - Agendamento atualizado com sucesso",
+            @ApiResponse(responseCode = "200", description = "OK",
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = AgendamentoResponseDto.class)
                     )
             ),
-            @ApiResponse(responseCode = "400", description = "Bad Request - Dados inválidos fornecidos", content = @Content()),
-            @ApiResponse(responseCode = "404", description = "Not Found - Agendamento não encontrado", content = @Content()),
-            @ApiResponse(responseCode = "409", description = "Conflict - Conflito de agendamento", content = @Content())
+            @ApiResponse(responseCode = "400", description = "Dados inválidos para atualização"),
+            @ApiResponse(responseCode = "404", description = "Agendamento não encontrado"),
+            @ApiResponse(responseCode = "409", description = "Conflito, já existe um agendamento para a data e horário especificados")
     })
     @PutMapping("/{id}")
-    public ResponseEntity<AgendamentoResponseDto> remarcar(@PathVariable Integer id, @RequestBody @Valid AgendamentoRequestDto agendamentoAtualizado) {
+    public ResponseEntity<AgendamentoResponseDto> remarcar(@PathVariable Integer id, @RequestBody AgendamentoRequestDto agendamentoAtualizado) {
 
         if (Objects.isNull(id) || id <= 0) {
             return ResponseEntity.status(404).build();
@@ -123,6 +165,7 @@ public class AgendamentoController {
 
         List<Agendamento> agendamentosExistentes = agendamentoService.findAll();
         for (Agendamento agendamento : agendamentosExistentes) {
+
             boolean mesmoId = agendamento.getId().equals(id);
             boolean existeAgendamentoNaData = agendamento.getDt().equals(agendamentoAtualizado.getDt());
             boolean existeAgendamentoNaHora = agendamento.getHorario().equals(agendamentoAtualizado.getHorario());
@@ -141,10 +184,19 @@ public class AgendamentoController {
         return ResponseEntity.status(200).body(AgendamentoMapper.toResponseDto(agendamentoConcluido));
     }
 
-    @Operation(summary = "Deletar um agendamento", description = "Deleta um agendamento por id específico")
+    //CONFIGURAÇÃO SWAGGER deletar()
+    @Operation(summary = "Deletar agendamento", description = """
+            Esse endpoint permite a exclusão de um agendamento específico com base no ID fornecido.
+
+            - Verifica se o ID é válido e se o agendamento existe no sistema.
+            
+            Respostas:
+            - 204: Agendamento excluído com sucesso.
+            - 404: Agendamento não encontrado para o ID especificado.
+            """)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "No Content - Agendamento deletado com sucesso", content = @Content()),
-            @ApiResponse(responseCode = "404", description = "Not Found - Agendamento não encontrado", content = @Content())
+            @ApiResponse(responseCode = "204", description = "Agendamento excluído com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Agendamento não encontrado")
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Integer id) {

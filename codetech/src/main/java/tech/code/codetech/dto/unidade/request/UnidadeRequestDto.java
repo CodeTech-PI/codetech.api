@@ -29,7 +29,6 @@ public class UnidadeRequestDto {
     @Size(max = 50)
     private String estado;
 
-    @NotBlank
     private String complemento;
 
     @NotNull

@@ -1,12 +1,5 @@
 package tech.code.codetech.api.controller;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,12 +11,17 @@ import tech.code.codetech.dto.lista.response.ListaProdutoResponseDto;
 import tech.code.codetech.mapper.ListaProdutoMapper;
 import tech.code.codetech.model.ListaProduto;
 import tech.code.codetech.service.ListaProdutoService;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
-@Tag(name = "Lista de Produtos")
+@Tag(name = "Lista de Produto")
 @RestController
 @RequestMapping("/lista-produtos")
 public class ListaProdutoController {
@@ -31,21 +29,31 @@ public class ListaProdutoController {
     @Autowired
     private ListaProdutoService listaProdutoService;
 
-    @Operation(summary = "Listar todos os produtos na lista", description = "Lista todos os produtos cadastrados na lista de produtos.")
+    // CONFIGURAÇÃO SWAGGER listar()
+    @Operation(summary = "Listar todos os produtos", description = """
+            Esse endpoint permite listar todos os produtos cadastrados:
+            
+            - Retorna uma lista de objetos representando cada produto.
+            
+            Respostas:
+            
+            - 200: Requisição sucedida. Retorna a lista de produtos em JSON.
+            - 204: Nenhum produto encontrado.
+            """)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Listar todos os produtos na lista",
+            @ApiResponse(responseCode = "200", description = "OK",
                     content = @Content(
                             mediaType = "application/json",
-                            array = @ArraySchema(schema = @Schema(implementation = ListaProdutoResponseDto.class))
+                            schema = @Schema(implementation = ListaProdutoResponseDto.class)
                     )
             ),
-            @ApiResponse(responseCode = "204", description = "Quando não há produtos cadastrados na lista", content = @Content())
+            @ApiResponse(responseCode = "204", description = "Nenhum produto encontrado.")
     })
     @GetMapping
-    public ResponseEntity<List<ListaProdutoResponseDto>> listar() {
+    public ResponseEntity<List<ListaProdutoResponseDto>> listar(){
         List<ListaProduto> listProdutos = listaProdutoService.findAll();
 
-        if (listProdutos.isEmpty()) {
+        if(listProdutos.isEmpty()){
             return ResponseEntity.status(204).build();
         }
         List<ListaProdutoResponseDto> resposta = new ArrayList<>();
@@ -56,69 +64,110 @@ public class ListaProdutoController {
         return ResponseEntity.status(200).body(resposta);
     }
 
-    @Operation(summary = "Buscar produto na lista por id", description = "Retorna um produto na lista por id específico.")
+    // CONFIGURAÇÃO SWAGGER encontrarPorId()
+    @Operation(summary = "Buscar produto por ID", description = """
+            Esse endpoint permite buscar um produto específico pelo seu ID.
+            
+            - Retorna o objeto `ListaProduto` correspondente ao ID fornecido.
+            
+            Respostas:
+            
+            - 200: Requisição sucedida. Retorna o produto solicitado em JSON.
+            - 404: Produto não encontrado para o ID informado.
+            """)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Mostra um produto específico na lista",
+            @ApiResponse(responseCode = "200", description = "OK",
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = ListaProdutoResponseDto.class)
                     )
             ),
-            @ApiResponse(responseCode = "404", description = "O produto na lista não foi encontrado", content = @Content())
+            @ApiResponse(responseCode = "404", description = "Produto não encontrado.")
     })
     @GetMapping("/{id}")
-    public ResponseEntity<ListaProdutoResponseDto> encontrarPorId(@PathVariable int id) {
+    public ResponseEntity<ListaProdutoResponseDto> encontrarPorId(@PathVariable int id){
         ListaProduto listaProdutoEncontrada = listaProdutoService.findById(id);
 
-        if (Objects.isNull(listaProdutoEncontrada)) {
+        if(Objects.isNull(listaProdutoEncontrada)){
             return ResponseEntity.status(404).build();
         }
 
         return ResponseEntity.status(200).body(ListaProdutoMapper.toResponseDto(listaProdutoEncontrada));
     }
 
-    @Operation(summary = "Criar produtos na lista", description = "Cria novos produtos na lista de produtos.")
+    // CONFIGURAÇÃO SWAGGER post()
+    @Operation(summary = "Criar produtos", description = """
+            Esse endpoint permite criar novos produtos na lista.
+            
+            - Retorna a lista de produtos criados.
+            
+            Respostas:
+            
+            - 201: Requisição sucedida. Retorna a lista de produtos criados em JSON.
+            - 400: Erro ao criar produtos. Verifique os dados fornecidos.
+            """)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Created",
+            @ApiResponse(responseCode = "201", description = "OK",
                     content = @Content(
                             mediaType = "application/json",
-                            array = @ArraySchema(schema = @Schema(implementation = ListaProdutoResponseDto.class))
+                            schema = @Schema(implementation = ListaProdutoResponseDto.class)
                     )
-            )
+            ),
+            @ApiResponse(responseCode = "400", description = "Erro ao criar produtos.")
     })
     @PostMapping
-    public ResponseEntity<List<ListaProdutoResponseDto>> post(@RequestBody @Valid ListaProdutoRequestDto dto) {
+    public ResponseEntity<List<ListaProdutoResponseDto>> post(@RequestBody @Valid ListaProdutoRequestDto dto){
         List<ListaProduto> listaSalva = listaProdutoService.saveAll(ListaProdutoMapper.toModel(dto));
         return ResponseEntity.status(201).body(ListaProdutoMapper.toResponseDto(listaSalva));
     }
 
-    @Operation(summary = "Atualizar produtos na lista", description = "Atualiza produtos existentes na lista de produtos.")
+    // CONFIGURAÇÃO SWAGGER atualizar()
+    @Operation(summary = "Atualizar produtos", description = """
+            Esse endpoint permite atualizar produtos existentes na lista.
+            
+            - Retorna a lista de produtos atualizados.
+            
+            Respostas:
+            
+            - 200: Requisição sucedida. Retorna a lista de produtos atualizados em JSON.
+            - 400: Erro ao atualizar produtos. Verifique os dados fornecidos.
+            """)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK",
                     content = @Content(
                             mediaType = "application/json",
-                            array = @ArraySchema(schema = @Schema(implementation = ListaProdutoResponseDto.class))
+                            schema = @Schema(implementation = ListaProdutoResponseDto.class)
                     )
             ),
-            @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos", content = @Content())
+            @ApiResponse(responseCode = "400", description = "Erro ao atualizar produtos.")
     })
     @PutMapping
-    public ResponseEntity<List<ListaProdutoResponseDto>> atualizar(@RequestBody @Valid ListaProdutoAtualizacaoRequestDto listaAtualizada) {
+    public ResponseEntity<List<ListaProdutoResponseDto>> atualizar(@RequestBody @Valid ListaProdutoAtualizacaoRequestDto listaAtualizada){
+
         List<ListaProduto> listaExiste = listaProdutoService.update(ListaProdutoMapper.toModel(listaAtualizada));
 
-        if (listaExiste.isEmpty()) {
+        if(listaExiste.isEmpty()){
             return ResponseEntity.status(400).build();
         }
 
         return ResponseEntity.status(200).body(ListaProdutoMapper.toResponseDto(listaExiste));
     }
 
-    @Operation(summary = "Deletar produtos da lista", description = "Deleta produtos da lista por ids específicos.")
+    // CONFIGURAÇÃO SWAGGER deletar()
+    @Operation(summary = "Deletar produtos", description = """
+            Esse endpoint permite deletar produtos da lista.
+            
+            - Retorna uma resposta sem conteúdo se a deleção for bem-sucedida.
+            
+            Respostas:
+            
+            - 204: Requisição sucedida. Os produtos foram deletados com sucesso.
+            """)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "No Content", content = @Content())
+            @ApiResponse(responseCode = "204", description = "Produtos deletados com sucesso.")
     })
     @DeleteMapping
-    public ResponseEntity<Void> deletar(@RequestBody ListaProdutoDeleteRequestDto listaProdutoDeleteRequestDto) {
+    public ResponseEntity<Void> deletar(@RequestBody ListaProdutoDeleteRequestDto listaProdutoDeleteRequestDto){
         listaProdutoService.deleteAll(listaProdutoDeleteRequestDto.getProdutosIds());
         return ResponseEntity.status(204).build();
     }

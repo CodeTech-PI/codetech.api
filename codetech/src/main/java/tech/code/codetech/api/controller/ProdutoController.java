@@ -29,11 +29,17 @@ public class ProdutoController {
     @Autowired
     private ProdutoService productService;
 
+    // CONFIGURAÇÃO SWAGGER listar()
     @Operation(summary = "Listar todos os produtos", description = """
-            # Listar todos os produtos
-            --- 
-            Lista todos os produtos cadastrados no estoque
-            """)
+        Esse endpoint permite a listagem de todos os produtos cadastrados no estoque:
+        
+        - Retorna uma lista de objetos representando cada produto.
+        
+        Respostas:
+        
+        - 200: Requisição sucedida. Retorna a lista de produtos em JSON.
+        - 204: Nenhum produto encontrado.
+        """)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Listar todos os produtos",
                     content = @Content(
@@ -41,9 +47,7 @@ public class ProdutoController {
                             array = @ArraySchema(schema = @Schema(implementation = ProdutoResponseDto.class))
                     )
             ),
-            @ApiResponse(responseCode = "204", description = "Quando não tem produtos cadastrados",
-                    content = @Content()
-            )
+            @ApiResponse(responseCode = "204", description = "Nenhum produto encontrado")
     })
     @GetMapping
     public ResponseEntity<List<ProdutoResponseDto>> listar() {
@@ -60,21 +64,26 @@ public class ProdutoController {
         return ResponseEntity.status(200).body(resposta);
     }
 
-    @Operation(summary = "Buscar produto por ID", description = """
-            # Buscar produto por id
-            --- 
-            Retorna um produto por id específico
-            """)
+
+    // CONFIGURAÇÃO SWAGGER encontrarPorId()
+    @Operation(summary = "Buscar produto por id", description = """
+        Esse endpoint permite retornar um produto específico pelo seu ID.
+        
+        - Retorna um objeto representando o produto se encontrado.
+        
+        Respostas:
+        
+        - 200: Requisição sucedida. Retorna o produto em JSON.
+        - 404: Produto não encontrado, ID fornecido inválido.
+        """)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Mostra um produto específico",
+            @ApiResponse(responseCode = "200", description = "OK",
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = ProdutoResponseDto.class)
                     )
             ),
-            @ApiResponse(responseCode = "404", description = "O produto não foi encontrado",
-                    content = @Content()
-            )
+            @ApiResponse(responseCode = "404", description = "Produto não encontrado")
     })
     @GetMapping("/{id}")
     public ResponseEntity<ProdutoResponseDto> encontrarPorId(@PathVariable Integer id) {
@@ -86,13 +95,18 @@ public class ProdutoController {
         return ResponseEntity.status(200).body(ProdutoMapper.toResponseDto(produtoEncontrado));
     }
 
-    @Operation(summary = "Criar um novo produto", description = """
-            # Criar um produto
-            --- 
-            Cria um novo produto
-            """)
+    // CONFIGURAÇÃO SWAGGER post()
+    @Operation(summary = "Criar um produto", description = """
+        Esse endpoint permite criar um novo produto no sistema.
+        
+        - Requer um objeto ProdutoRequestDto no corpo da requisição.
+        
+        Respostas:
+        
+        - 201: Produto criado com sucesso. Retorna o objeto do produto criado em JSON.
+        """)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Produto criado com sucesso",
+            @ApiResponse(responseCode = "201", description = "Created",
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = ProdutoResponseDto.class)
@@ -105,20 +119,27 @@ public class ProdutoController {
         return ResponseEntity.status(201).body(ProdutoMapper.toResponseDto(productSaved));
     }
 
-    @Operation(summary = "Atualizar um produto por ID", description = """
-            # Atualizar um produto
-            --- 
-            Atualiza um produto por id específico
-            """)
+    // CONFIGURAÇÃO SWAGGER atualizar()
+    @Operation(summary = "Atualizar um produto", description = """
+        Esse endpoint permite atualizar um produto específico pelo seu ID.
+        
+        - Requer um objeto ProdutoRequestDto no corpo da requisição para os novos dados do produto.
+        
+        Respostas:
+        
+        - 200: Produto atualizado com sucesso. Retorna o objeto do produto atualizado em JSON.
+        - 400: Solicitação inválida.
+        - 404: Produto não encontrado.
+        """)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Produto atualizado com sucesso",
+            @ApiResponse(responseCode = "200", description = "OK",
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = ProdutoResponseDto.class)
                     )
             ),
-            @ApiResponse(responseCode = "404", description = "O produto não foi encontrado", content = @Content()),
-            @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos", content = @Content())
+            @ApiResponse(responseCode = "400", description = "Solicitação inválida"),
+            @ApiResponse(responseCode = "404", description = "Produto não encontrado")
     })
     @PutMapping("/{id}")
     public ResponseEntity<ProdutoResponseDto> atualizar(@PathVariable Integer id, @RequestBody @Valid ProdutoRequestDto produtoAtualizado) {
@@ -137,16 +158,22 @@ public class ProdutoController {
         return ResponseEntity.status(200).body(ProdutoMapper.toResponseDto(productExists));
     }
 
-    @Operation(summary = "Deletar um produto por ID", description = """
-            # Deletar um produto
-            --- 
-            Deleta um produto por id específico
-            """)
+    // CONFIGURAÇÃO SWAGGER deletar()
+    @Operation(summary = "Deletar um produto", description = """
+        Esse endpoint permite deletar um produto específico pelo seu ID.
+        
+        - Requer o ID do produto a ser deletado como parâmetro na URL.
+        
+        Respostas:
+        
+        - 204: Produto deletado com sucesso. Não retorna conteúdo.
+        - 404: Produto não encontrado.
+        """)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Produto deletado com sucesso",
-                    content = @Content())
-            ,
-            @ApiResponse(responseCode = "404", description = "O produto não foi encontrado", content = @Content())
+            @ApiResponse(responseCode = "204", description = "No Content",
+                    content = @Content()
+            ),
+            @ApiResponse(responseCode = "404", description = "Produto não encontrado")
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Integer id) {
@@ -161,24 +188,35 @@ public class ProdutoController {
         return ResponseEntity.status(204).build();
     }
 
-    @Operation(summary = "Exportar produtos para CSV", description = """
-            # Exportar arquivos dos produtos
-            --- 
-            Exportar todos os produtos cadastrados no estoque
-            """)
+    // CONFIGURAÇÃO SWAGGER exportarProdutosParaCsv()
+    @Operation(summary = "Exportar arquivos dos produtos", description = """
+        Esse endpoint permite exportar todos os produtos cadastrados no estoque para um arquivo CSV.
+        
+        - Retorna uma mensagem de sucesso ao concluir a exportação.
+        
+        Respostas:
+        
+        - 200: Exportação realizada com sucesso. Retorna uma mensagem indicando que os produtos foram exportados.
+        - 204: Nenhum produto encontrado para exportação.
+        """)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Produtos exportados com sucesso",
+            @ApiResponse(responseCode = "200", description = "Ok. Exportação realizada com sucesso.",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(type = "string", example = "Produtos exportados com sucesso para o arquivo produtos.csv")
+                            schema = @Schema(implementation = String.class)
                     )
             ),
-            @ApiResponse(responseCode = "204", description = "Quando não tem produtos cadastrados",
+            @ApiResponse(responseCode = "204", description = "Nenhum produto encontrado para exportação.",
                     content = @Content()
             )
     })
     @GetMapping("/exportar")
     public ResponseEntity<String> exportarProdutosParaCsv() {
+        List<Produto> produtos = productService.findAll();
+        if (produtos.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
         productService.exportarProdutosParaCsv();
         return ResponseEntity.ok("Produtos exportados com sucesso para o arquivo produtos.csv");
     }
