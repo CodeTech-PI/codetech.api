@@ -1,6 +1,7 @@
 package tech.code.codetech.api.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -19,6 +20,7 @@ import tech.code.codetech.service.UnidadeService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
 @Tag(name = "Unidade")
 @RestController
 @RequestMapping("/unidades")
@@ -27,17 +29,26 @@ public class UnidadeController {
     @Autowired
     private UnidadeService unidadeService;
 
-    @Operation(summary = "", description = """
-            # Listar todas as unidades
-            ---
-            Lista todas as undidades no banco de dados
-            """)
+    //CONFIGURAÇÃO SWAGGGER listar()
+    @Operation(summary = "Listar todas as unidades", description = """
+        Esse endpoint permite listar todas as unidades cadastradas no banco de dados.
+        
+        - Retorna uma lista de objetos representando cada unidade.
+        
+        Respostas:
+        
+        - 200: Requisição sucedida. Retorna a lista de unidades em JSON.
+        - 204: Nenhuma unidade encontrada.
+        """)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ProdutoResponseDto.class)
+                            array = @ArraySchema(schema = @Schema(implementation = UnidadeResponseDto.class))
                     )
+            ),
+            @ApiResponse(responseCode = "204", description = "Nenhuma unidade encontrada",
+                    content = @Content()
             )
     })
     @GetMapping
@@ -55,18 +66,25 @@ public class UnidadeController {
         return ResponseEntity.status(200).body(resposta);
     }
 
-    @Operation(summary = "", description = """
-            # Buscar uma unidade
-            ---
-            Retorna uma unidade por id específico
-            """)
+    //CONFIGURAÇÃO SWAGGER buscarPorId()
+    @Operation(summary = "Buscar uma unidade", description = """
+        Esse endpoint permite buscar uma unidade específica pelo ID.
+        
+        - Retorna um objeto representando a unidade encontrada.
+        
+        Respostas:
+        
+        - 200: Requisição sucedida. Retorna a unidade em JSON.
+        - 404: Unidade não encontrada, ID inválido.
+        """)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ProdutoResponseDto.class)
+                            schema = @Schema(implementation = UnidadeResponseDto.class)
                     )
-            )
+            ),
+            @ApiResponse(responseCode = "404", description = "Unidade não encontrada")
     })
     @GetMapping("/{id}")
     public ResponseEntity<UnidadeResponseDto> buscarPorId(@PathVariable Integer id) {
@@ -77,16 +95,22 @@ public class UnidadeController {
         }
         return ResponseEntity.status(200).body(UnidadeMapper.toResponseDto(unidade));
     }
-    @Operation(summary = "", description = """
-            # Criar uma unidade
-            ---
-            Cria uma nova unidade no banco de dados
-            """)
+
+    //CONFIGURAÇÃO SWAGGER post()
+    @Operation(summary = "Criar uma unidade", description = """
+        Esse endpoint permite criar uma nova unidade no banco de dados.
+        
+        - Retorna a unidade criada.
+        
+        Respostas:
+        
+        - 201: Unidade criada com sucesso. Retorna a unidade em JSON.
+        """)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Created",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ProdutoResponseDto.class)
+                            schema = @Schema(implementation = UnidadeResponseDto.class)
                     )
             )
     })
@@ -95,17 +119,27 @@ public class UnidadeController {
         Unidade unidade = unidadeService.save(UnidadeMapper.toModel(dto));
         return ResponseEntity.status(201).body(UnidadeMapper.toResponseDto(unidade));
     }
-    @Operation(summary = "", description = """
-            # Atualizar uma unidade
-            ---
-            Atualiza uma unidade por id específico
-            """)
+
+    //CONFIGURAÇÃO SWAGGER atualizar()
+    @Operation(summary = "Atualizar uma unidade", description = """
+        Esse endpoint permite atualizar uma unidade existente pelo ID.
+        
+        - Retorna a unidade atualizada.
+        
+        Respostas:
+        
+        - 200: Unidade atualizada com sucesso. Retorna a unidade em JSON.
+        - 404: Unidade não encontrada, dados inválidos.
+        """)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ProdutoResponseDto.class)
+                            schema = @Schema(implementation = UnidadeResponseDto.class)
                     )
+            ),
+            @ApiResponse(responseCode = "404", description = "Unidade não encontrada",
+                    content = @Content()
             )
     })
     @PutMapping("/{id}")
@@ -124,17 +158,23 @@ public class UnidadeController {
         }
         return ResponseEntity.status(200).body(UnidadeMapper.toResponseDto(unidadeExists));
     }
-    @Operation(summary = "", description = """
-            # Deletar uma unidade
-            ---
-            Deleta uma unidade por id específico
-            """)
+
+
+    //CONFIGURAÇÃO SWAGGER deletar()
+    @Operation(summary = "Deletar uma unidade", description = """
+        Esse endpoint permite deletar uma unidade pelo ID.
+        
+        Respostas:
+        
+        - 204: Unidade deletada com sucesso. Não retorna conteúdo.
+        - 404: Unidade não encontrada, dados inválidos.
+        """)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "No Content",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ProdutoResponseDto.class)
-                    )
+                    content = @Content()
+            ),
+            @ApiResponse(responseCode = "404", description = "Unidade não encontrada",
+                    content = @Content()
             )
     })
     @DeleteMapping("/{id}")

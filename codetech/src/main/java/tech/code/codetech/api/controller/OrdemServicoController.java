@@ -30,18 +30,22 @@ public class OrdemServicoController {
     @Autowired
     private OrdemServicoInterface ordemServicoService;
 
-    @Operation(summary = "", description = """
-            # Listar todas as ordens de serviço
-            ---
-            Lista todas as ordens de serviço no banco de dados
+    //CONFIGURAÇÃO SWAGGER listar()
+    @Operation(summary = "Listar todas as ordens de serviço", description = """
+            Esse endpoint permite listar todas as ordens de serviço no banco de dados.
+            
+            Respostas:
+            - 200: OK. Retorna a lista de ordens de serviço em JSON.
+            - 204: Nenhuma ordem de serviço encontrada.
             """)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ProdutoResponseDto.class)
+                            schema = @Schema(implementation = OrdemServicoResponseDto.class)
                     )
-            )
+            ),
+            @ApiResponse(responseCode = "204", description = "Nenhuma ordem de serviço encontrada.")
     })
     @GetMapping
     public ResponseEntity<List<OrdemServicoResponseDto>> listar(){
@@ -57,36 +61,46 @@ public class OrdemServicoController {
         }
         return ResponseEntity.status(200).body(resposta);
     }
-    @Operation(summary = "", description = """
-            # Buscar uma ordem de serviço por id
-            ---
-            Retorna uma ordem de serviço por id específico
+
+    //CONFIGURAÇÃO SWAGGER encontrarPorId()
+    @Operation(summary = "Buscar uma ordem de serviço por ID", description = """
+            Esse endpoint permite buscar uma ordem de serviço específica pelo ID.
+            
+            Respostas:
+            - 200: OK. Retorna a ordem de serviço encontrada em JSON.
+            - 404: Ordem de serviço não encontrada para o ID fornecido.
             """)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ProdutoResponseDto.class)
+                            schema = @Schema(implementation = OrdemServicoResponseDto.class)
                     )
-            )
+            ),
+            @ApiResponse(responseCode = "404", description = "Ordem de serviço não encontrada.")
     })
     @GetMapping("/{id}")
     public ResponseEntity<OrdemServicoResponseDto> encontrarPorId(@PathVariable int id){
         OrdemServicoLucroDto ordemServicoEncontrada = ordemServicoService.buscarPorId(id);
         return ResponseEntity.status(200).body(OrdemServicoMapper.toResponseDto(ordemServicoEncontrada));
     }
-    @Operation(summary = "", description = """
-            # Criar uma ordem de serviço
-            ---
-            Cria uma nova ordem de serviço
+
+    //CONFIGURAÇÃO SWAGGER post()
+    @Operation(summary = "Criar uma ordem de serviço", description = """
+            Esse endpoint permite criar uma nova ordem de serviço.
+            
+            Respostas:
+            - 201: Ok. Retorna a ordem de serviço criada em JSON.
+            - 400: Erro ao criar a ordem de serviço, dados inválidos.
             """)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Created",
+            @ApiResponse(responseCode = "201", description = "Ok",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ProdutoResponseDto.class)
+                            schema = @Schema(implementation = OrdemServicoResponseDto.class)
                     )
-            )
+            ),
+            @ApiResponse(responseCode = "400", description = "Erro ao criar a ordem de serviço.")
     })
     @PostMapping
     public ResponseEntity<OrdemServicoResponseDto> post(@RequestBody @Valid OrdemServicoRequestDto dto){
@@ -94,18 +108,24 @@ public class OrdemServicoController {
         return ResponseEntity.status(201).body(OrdemServicoMapper.toResponseDto(ordemServicoSalva));
     }
 
-    @Operation(summary = "", description = """
-            # Atualizar uma ordem de serviço
-            ---
-            Atualiza uma ordem de serviço por id específico
+    //CONFIGURAÇÃO SWAGGER atualizar()
+    @Operation(summary = "Atualizar uma ordem de serviço", description = """
+            Esse endpoint permite atualizar uma ordem de serviço específica pelo ID.
+            
+            Respostas:
+            - 200: OK. Retorna a ordem de serviço atualizada em JSON.
+            - 400: Erro ao atualizar a ordem de serviço, dados inválidos.
+            - 404: Ordem de serviço não encontrada.
             """)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ProdutoResponseDto.class)
+                            schema = @Schema(implementation = OrdemServicoResponseDto.class)
                     )
-            )
+            ),
+            @ApiResponse(responseCode = "400", description = "Erro ao atualizar a ordem de serviço."),
+            @ApiResponse(responseCode = "404", description = "Ordem de serviço não encontrada.")
     })
     @PutMapping("/{id}")
     public ResponseEntity<OrdemServicoResponseDto> atualizar(@PathVariable int id, @RequestBody @Valid OrdemServicoRequestDto ordemServico){
@@ -118,18 +138,17 @@ public class OrdemServicoController {
     }
 
 
-//    @Operation(summary = "", description = """
-//            # Deletar uma ordem de serviço
-//            ---
-//            Deleta uma ordem de serviço por id específico
+    //CONFIGURAÇÃO SWAGGER deletar()
+//    @Operation(summary = "Deletar uma ordem de serviço", description = """
+//            Esse endpoint permite deletar uma ordem de serviço específica pelo ID.
+//
+//            Respostas:
+//            - 204: No Content. Ordem de serviço deletada com sucesso.
+//            - 404: Ordem de serviço não encontrada.
 //            """)
 //    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "204", description = "No Content",
-//                    content = @Content(
-//                            mediaType = "application/json",
-//                            schema = @Schema(implementation = ProdutoResponseDto.class)
-//                    )
-//            )
+//            @ApiResponse(responseCode = "204", description = "No Content. Ordem de serviço deletada com sucesso."),
+//            @ApiResponse(responseCode = "404", description = "Ordem de serviço não encontrada.")
 //    })
 //    @DeleteMapping("/{id}")
 //    public ResponseEntity<Void> deletar(@PathVariable int id){

@@ -2,6 +2,7 @@ package tech.code.codetech.api.controller;
 
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -32,18 +33,25 @@ public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
-    @Operation(summary = "", description = """
-            # Listar todos os usuários
-            ---
-            Lista todos os usuários no banco de dados
-            """)
+    //CONFIGURAÇÃO SWAGGER listar()
+    @Operation(summary = "Listar todos os usuários", description = """
+        Esse endpoint permite listar todos os usuários cadastrados no banco de dados.
+        
+        - Retorna uma lista de objetos representando cada usuário.
+        
+        Respostas:
+        
+        - 200: Requisição sucedida. Retorna a lista de usuários em JSON.
+        - 204: Nenhum usuário encontrado.
+        """)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ProdutoResponseDto.class)
+                            array = @ArraySchema(schema = @Schema(implementation = UsuariosResponseDto.class))
                     )
-            )
+            ),
+            @ApiResponse(responseCode = "204", description = "Nenhum usuário encontrado")
     })
     @GetMapping
     public ResponseEntity<List<UsuariosResponseDto>> listar() {
@@ -60,18 +68,25 @@ public class UsuarioController {
         return ResponseEntity.status(200).body(usuarios);
     }
 
-    @Operation(summary = "", description = """
-            # Buscar usuário por id
-            ---
-            Retorna um usuário por id específico
-            """)
+    //CONFIGURAÇÂO SWAGGER encontrarPorId()
+    @Operation(summary = "Buscar usuário por id", description = """
+        Esse endpoint permite buscar um usuário específico pelo ID.
+        
+        - Retorna um objeto representando o usuário encontrado.
+        
+        Respostas:
+        
+        - 200: Requisição sucedida. Retorna o usuário em JSON.
+        - 404: Usuário não encontrado, ID inválido.
+        """)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ProdutoResponseDto.class)
+                            schema = @Schema(implementation = UsuariosResponseDto.class)
                     )
-            )
+            ),
+            @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
     })
     @GetMapping("/{id}")
     public ResponseEntity<UsuariosResponseDto> encontrarPorId(@PathVariable Integer id) {
@@ -82,16 +97,22 @@ public class UsuarioController {
         }
         return ResponseEntity.status(200).body(UsuarioMapper.toResponseDto(usuarioEncontrado));
     }
-    @Operation(summary = "", description = """
-            # Criar um usuário
-            ---
-            Cria um novo usuário no banco de dados
-            """)
+
+    //CONFIGURAÇÂO SWAGGER post()
+    @Operation(summary = "Criar um usuário", description = """
+        Esse endpoint permite criar um novo usuário no banco de dados.
+        
+        - Retorna o usuário criado.
+        
+        Respostas:
+        
+        - 201: Usuário criado com sucesso. Retorna o usuário em JSON.
+        """)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Created",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ProdutoResponseDto.class)
+                            schema = @Schema(implementation = UsuariosResponseDto.class)
                     )
             )
     })
@@ -100,18 +121,26 @@ public class UsuarioController {
         Usuario usuarioSaved = usuarioService.save(UsuarioMapper.toModel(dto));
         return ResponseEntity.status(201).body(UsuarioMapper.toResponseDto(usuarioSaved));
     }
-    @Operation(summary = "", description = """
-            # Atualizar um usuário
-            ---
-            Atualiza um usuário por id específico
-            """)
+
+    //CONFIGURAÇÂO SWAGGER atualizar()
+    @Operation(summary = "Atualizar um usuário", description = """
+        Esse endpoint permite atualizar um usuário existente pelo ID.
+        
+        - Retorna o usuário atualizado.
+        
+        Respostas:
+        
+        - 200: Usuário atualizado com sucesso. Retorna o usuário em JSON.
+        - 404: Usuário não encontrado, dados inválidos.
+        """)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ProdutoResponseDto.class)
+                            schema = @Schema(implementation = UsuariosResponseDto.class)
                     )
-            )
+            ),
+            @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
     })
     @PutMapping("/{id}")
     public ResponseEntity<UsuariosResponseDto> atualizar(@PathVariable Integer id, @RequestBody @Valid UsuariosRequestDto usuarioAtualizado) {
@@ -129,18 +158,21 @@ public class UsuarioController {
 
         return ResponseEntity.status(200).body(UsuarioMapper.toResponseDto(usuarioExists));
     }
-    @Operation(summary = "", description = """
-            # Deletar um usuário
-            ---
-            Deleta um usuário por id específico
-            """)
+
+    //CONFIGURAÇÂO SWAGGER deletar()
+    @Operation(summary = "Deletar um usuário", description = """
+        Esse endpoint permite deletar um usuário pelo ID.
+        
+        Respostas:
+        
+        - 204: Usuário deletado com sucesso. Não retorna conteúdo.
+        - 404: Usuário não encontrado, dados inválidos.
+        """)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "No Content",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ProdutoResponseDto.class)
-                    )
-            )
+                    content = @Content()
+            ),
+            @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Integer id) {

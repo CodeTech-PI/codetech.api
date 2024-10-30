@@ -1,6 +1,7 @@
 package tech.code.codetech.api.controller;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import java.util.Objects;
 import tech.code.codetech.service.autenticacao.dto.UsuarioLombardiTokenDto;
 import tech.code.codetech.service.autenticacao.dto.UsuarioLombardiLoginDto;
 
+@Tag(name = "Lombardi")
 @RestController
 @RequestMapping("/lombardi")
 public class UsuarioLombardiController {

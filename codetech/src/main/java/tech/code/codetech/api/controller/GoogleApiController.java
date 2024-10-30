@@ -30,6 +30,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+
 @Tag(name = "GoogleApi")
 @RestController
 @RequestMapping("/api/events")
@@ -39,18 +40,25 @@ public class GoogleApiController {
     private GoogleApiAuthorizationService googleApiAuthorizationService;
 
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
-    @Operation(summary = "", description = """
-            # Criar um evento
-            ---
-            Cria um novo evento na Api Calendar
+
+    // CONFIGURAÇÃO SWAGGER criarEvento()
+    @Operation(summary = "Criar um evento", description = """
+            Esse endpoint permite criar um novo evento na API Calendar.
+            
+            Respostas:
+            - 201: Evento criado com sucesso.
+            - 400: Requisição inválida (dados do evento não fornecidos).
+            - 500: Erro interno do servidor ao tentar criar o evento.
             """)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Created",
+            @ApiResponse(responseCode = "201", description = "OK",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ProdutoResponseDto.class)
+                            schema = @Schema(implementation = String.class)
                     )
-            )
+            ),
+            @ApiResponse(responseCode = "400", description = "Verifique se todos os dados necessários para criar o evento foram fornecidos corretamente."),
+            @ApiResponse(responseCode = "500", description = "Ocorreu um erro ao tentar criar o evento. Verifique a configuração da API e as credenciais de autenticação.")
     })
     @PostMapping
     public String criarEvento(@RequestBody GoogleApi eventRequest) throws GeneralSecurityException, IOException {
@@ -81,21 +89,29 @@ public class GoogleApiController {
         return "Event created: " + event.getHtmlLink();
     }
 
-    private LocalDateTime dateTimeToLocalDateTime(DateTime dateTime) {
-        return LocalDateTime.ofInstant(Instant.ofEpochMilli(dateTime.getValue()), ZoneId.systemDefault());
-    }
-    @Operation(summary = "", description = """
-            # Listar todos os eventos
-            ---
-            Lista todos os eventos na Api Calendar
+    // CONFIGURAÇÃO SWAGGER listEvents()
+    @Operation(summary = "Listar todos os eventos", description = """
+            Esse endpoint permite listar todos os eventos na API Calendar:
+            
+            - Retorna uma lista de objetos representando cada evento.
+            
+            Respostas:
+            
+            - 200: Requisição sucedida. Retorna a lista de eventos em JSON.
+            - 204: Nenhum evento encontrado no calendário.
+            - 500: Erro ao acessar a API Calendar. Verifique as credenciais e a configuração da API.
+            - 403: Acesso negado. Verifique as permissões de autenticação.
             """)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ProdutoResponseDto.class)
+                            schema = @Schema(implementation = GoogleApi.class)
                     )
-            )
+            ),
+            @ApiResponse(responseCode = "204", description = "Nenhum evento encontrado no calendário."),
+            @ApiResponse(responseCode = "500", description = "Erro ao acessar a API Calendar. Verifique as credenciais e a configuração da API."),
+            @ApiResponse(responseCode = "403", description = "Acesso negado. Verifique as permissões de autenticação.")
     })
     @GetMapping
     public List<GoogleApi> listEvents() throws GeneralSecurityException, IOException {
@@ -138,6 +154,10 @@ public class GoogleApiController {
         return listaItems;
     }
 
+    private LocalDateTime dateTimeToLocalDateTime(DateTime dateTime) {
+        return LocalDateTime.ofInstant(Instant.ofEpochMilli(dateTime.getValue()), ZoneId.systemDefault());
+    }
+
     private static LocalDateTime formatDateTimeToLocalDateTime(DateTime dateTime) {
         // Criar um objeto Instant a partir do timestamp
         Instant instant = Instant.ofEpochMilli(dateTime.getValue());
@@ -173,6 +193,4 @@ public class GoogleApiController {
             }
         }
     }
-
-
 }
