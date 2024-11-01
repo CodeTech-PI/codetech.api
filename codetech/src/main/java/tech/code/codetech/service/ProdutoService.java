@@ -80,6 +80,9 @@ public class ProdutoService implements ProdutoInterface {
             Produto produto = listaProduto.getProduto();
             produto.setQuantidade(produto.getQuantidade() - listaProduto.getQuantidadeProdutos());
         }
+
+        int contador = 0;
+        precoTotal(contador);
     }
 
     public BigDecimal precoTotal(int contador) {
