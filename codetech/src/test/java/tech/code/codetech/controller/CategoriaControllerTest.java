@@ -1,6 +1,7 @@
 package tech.code.codetech.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -56,8 +57,8 @@ class CategoriaControllerTest {
     @DisplayName("Atualizar deve retornar a categoria atualizada e o status 200 (OK)")
     @Test
     void atualizarCategoria() throws Exception {
-        Categoria categoria = Mockito.mock(Categoria.class);
-        Mockito.when(this.categoriaService.update(Mockito.eq(1), Mockito.any(Categoria.class))).thenReturn(categoria);
+        Categoria categoria = CategoriaFixture.buildCategoria();
+        Mockito.when(this.categoriaService.update(Mockito.anyInt(), Mockito.any(Categoria.class))).thenReturn(categoria);
         this.mockMvc.perform(MockMvcRequestBuilders.put("/categorias/1")
                         .with(csrf())
                         .contentType("application/json")
