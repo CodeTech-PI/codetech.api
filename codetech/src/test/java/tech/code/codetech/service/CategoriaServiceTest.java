@@ -89,14 +89,14 @@ class CategoriaServiceTest {
          Assertions.assertNull(this.categoriaService.findById(1));
     }
 
-    @DisplayName("Deletar deve retornar true se a categoria for deletada")
+    @DisplayName("Deletar Categoria deve retornar true se a categoria for deletada")
     @Test
     void deletarCategoria(){
          Mockito.when(categoriaRepository.existsById(ArgumentMatchers.anyInt())).thenReturn(true);
          Assertions.assertTrue(categoriaService.delete(1));
     }
 
-    @DisplayName("Deletar deve retornar true se a categoria for deletada")
+    @DisplayName("Deletar Categoria deve retornar false se a categoria não for deletada")
     @Test
     void deletarCategoriaNaoExistente(){
         Mockito.when(categoriaRepository.existsById(ArgumentMatchers.anyInt())).thenReturn(false);
