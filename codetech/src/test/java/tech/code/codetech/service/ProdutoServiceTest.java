@@ -29,7 +29,7 @@ public class ProdutoServiceTest {
     }
 
     @BeforeEach
-    void setIp(){
+    void setup(){
 
     }
 
@@ -56,7 +56,6 @@ public class ProdutoServiceTest {
         Mockito.when(produtoRepository.existsById(ArgumentMatchers.anyInt())).thenReturn(false);
         Assertions.assertNull(produtoService.update(1, Mockito.mock(Produto.class)));
     }
-
     @DisplayName("Listar deve retornar uma lista de produtos")
     @Test
     void listarProdutos(){
