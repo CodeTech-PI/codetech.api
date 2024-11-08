@@ -125,5 +125,4 @@ public class ListaProdutosServiceTest {
         listaProdutoService.deleteAll(ids);
         Mockito.verify(listaProdutoRepository).deleteAllById(ids);
     }
-
 }
