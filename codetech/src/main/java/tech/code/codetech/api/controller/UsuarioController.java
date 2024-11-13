@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tech.code.codetech.dto.produto.response.ProdutoResponseDto;
@@ -20,6 +21,7 @@ import tech.code.codetech.mapper.UsuarioMapper;
 import tech.code.codetech.model.Produto;
 import tech.code.codetech.model.Usuario;
 import tech.code.codetech.service.UsuarioService;
+import tech.code.codetech.strategy.pilha.PilhaObj;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,8 +32,11 @@ import java.util.Objects;
 @RequestMapping("/usuarios")
 public class UsuarioController {
 
+
     @Autowired
     private UsuarioService usuarioService;
+
+    private static PilhaObj<Integer> pilhaDeUsuarios = new PilhaObj<>(100);
 
     //CONFIGURAÇÃO SWAGGER listar()
     @Operation(summary = "Listar todos os usuários", description = """
@@ -120,6 +125,7 @@ public class UsuarioController {
     @PostMapping
     public ResponseEntity<UsuariosResponseDto> post(@RequestBody @Valid UsuariosRequestDto dto) {
         Usuario usuarioSaved = usuarioService.save(UsuarioMapper.toModel(dto));
+        pilhaDeUsuarios.push(usuarioSaved.getId());
         return ResponseEntity.status(201).body(UsuarioMapper.toResponseDto(usuarioSaved));
     }
 
@@ -185,5 +191,21 @@ public class UsuarioController {
             return ResponseEntity.status(404).build();
         }
         return ResponseEntity.status(204).build();
+    }
+
+    @DeleteMapping("/desfazer-cadastro")
+    public ResponseEntity<String> desfazerCadastro() {
+
+        if (!pilhaDeUsuarios.isEmpty()) {
+            Integer ultimoUsuario = pilhaDeUsuarios.pop();
+            Usuario usuario = usuarioService.findById(ultimoUsuario);
+
+            if(usuario != null){
+                usuarioService.delete(ultimoUsuario);
+            }
+
+            return ResponseEntity.ok("Cadastro desfeito com sucesso!");
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Nenhum cadastro para desfazer.");
     }
 }
