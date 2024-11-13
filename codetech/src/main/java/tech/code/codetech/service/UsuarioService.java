@@ -3,6 +3,7 @@ package tech.code.codetech.service;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tech.code.codetech.dto.usuarios.request.UsuariosRequestDto;
 import tech.code.codetech.model.Produto;
 import tech.code.codetech.model.Usuario;
 import tech.code.codetech.repository.UsuarioRepository;
@@ -44,4 +45,5 @@ public class UsuarioService implements UsuarioInterface {
         usuarioRepository.deleteById(id);
         return true;
     }
+
 }

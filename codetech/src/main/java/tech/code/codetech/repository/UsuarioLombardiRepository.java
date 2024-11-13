@@ -9,4 +9,6 @@ public interface UsuarioLombardiRepository extends JpaRepository<UsuarioLombardi
     UsuarioLombardi findByEmailAndSenha(String email, String password);
 
     Optional<UsuarioLombardi> findByEmail(String email);
+
+
 }
