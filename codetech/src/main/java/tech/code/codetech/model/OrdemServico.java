@@ -24,6 +24,4 @@ public class OrdemServico {
     @OneToOne
     private Agendamento agendamento;
 
-    @ManyToOne
-    private Produto produto;
 }
