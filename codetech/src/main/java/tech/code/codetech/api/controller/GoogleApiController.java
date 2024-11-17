@@ -60,6 +60,7 @@ public class GoogleApiController {
             @ApiResponse(responseCode = "400", description = "Verifique se todos os dados necessários para criar o evento foram fornecidos corretamente."),
             @ApiResponse(responseCode = "500", description = "Ocorreu um erro ao tentar criar o evento. Verifique a configuração da API e as credenciais de autenticação.")
     })
+
     @PostMapping
     public String criarEvento(@RequestBody GoogleApi eventRequest) throws GeneralSecurityException, IOException {
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
@@ -113,6 +114,7 @@ public class GoogleApiController {
             @ApiResponse(responseCode = "500", description = "Erro ao acessar a API Calendar. Verifique as credenciais e a configuração da API."),
             @ApiResponse(responseCode = "403", description = "Acesso negado. Verifique as permissões de autenticação.")
     })
+
     @GetMapping
     public List<GoogleApi> listEvents() throws GeneralSecurityException, IOException {
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
@@ -153,6 +155,71 @@ public class GoogleApiController {
         }
         return listaItems;
     }
+
+    @GetMapping("/{eventId}")
+    public GoogleApi buscarEventoPorId(@PathVariable String eventId) throws GeneralSecurityException, IOException {
+        final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+        Calendar service = new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, googleApiAuthorizationService.getCredentials(HTTP_TRANSPORT))
+                .setApplicationName("CodeTech")
+                .build();
+
+        Event event = service.events().get("primary", eventId).execute();
+
+        GoogleApi googleApi = new GoogleApi();
+        googleApi.setSummary(event.getSummary());
+        googleApi.setDescription(event.getDescription());
+
+        // Converter as datas para LocalDateTime
+        DateTime startDateTime = event.getStart().getDateTime();
+        DateTime endDateTime = event.getEnd().getDateTime();
+
+        if (startDateTime != null) {
+            googleApi.setStartDateTime(formatDateTimeToLocalDateTime(startDateTime));
+        }
+        if (endDateTime != null) {
+            googleApi.setEndDateTime(formatDateTimeToLocalDateTime(endDateTime));
+        }
+
+        return googleApi;
+    }
+
+
+    @PutMapping("/{eventId}")
+    public String atualizarEvento(@PathVariable String eventId, @RequestBody GoogleApi eventRequest) throws GeneralSecurityException, IOException {
+        final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+        Calendar service = new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, googleApiAuthorizationService.getCredentials(HTTP_TRANSPORT))
+                .setApplicationName("CodeTech")
+                .build();
+
+        Event event = service.events().get("primary", eventId).execute();
+        event.setSummary(eventRequest.getSummary());
+        event.setDescription(eventRequest.getDescription());
+
+        // Atualizar datas
+        LocalDateTime startDateTime = eventRequest.getStartDateTime();
+        LocalDateTime endDateTime = eventRequest.getEndDateTime();
+
+        DateTime startGoogleDateTime = new DateTime(ZonedDateTime.of(startDateTime, ZoneId.systemDefault()).toInstant().toEpochMilli());
+        DateTime endGoogleDateTime = new DateTime(ZonedDateTime.of(endDateTime, ZoneId.systemDefault()).toInstant().toEpochMilli());
+
+        event.setStart(new EventDateTime().setDateTime(startGoogleDateTime));
+        event.setEnd(new EventDateTime().setDateTime(endGoogleDateTime));
+
+        event = service.events().update("primary", eventId, event).execute();
+        return "Evento atualizado: " + event.getHtmlLink();
+    }
+
+    @DeleteMapping("/{eventId}")
+    public String deletarEvento(@PathVariable String eventId) throws GeneralSecurityException, IOException {
+        final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+        Calendar service = new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, googleApiAuthorizationService.getCredentials(HTTP_TRANSPORT))
+                .setApplicationName("CodeTech")
+                .build();
+
+        service.events().delete("primary", eventId).execute();
+        return "Evento deletado com sucesso!";
+    }
+
 
     private LocalDateTime dateTimeToLocalDateTime(DateTime dateTime) {
         return LocalDateTime.ofInstant(Instant.ofEpochMilli(dateTime.getValue()), ZoneId.systemDefault());
