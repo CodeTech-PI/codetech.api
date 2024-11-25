@@ -156,6 +156,30 @@ public class GoogleApiController {
         return listaItems;
     }
 
+    // CONFIGURAÇÃO SWAGGER buscarEventoPorId()
+    @Operation(summary = "Buscar um evento pelo ID", description = """
+            Esse endpoint permite listar um evento na API Calendar:
+            
+            - Retorna um objeto representando um evento.
+            
+            Respostas:
+            
+            - 200: Requisição sucedida. Retorna a lista de eventos em JSON.
+            - 204: Nenhum evento encontrado no calendário.
+            - 500: Erro ao acessar a API Calendar. Verifique as credenciais e a configuração da API.
+            - 403: Acesso negado. Verifique as permissões de autenticação.
+            """)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = GoogleApi.class)
+                    )
+            ),
+            @ApiResponse(responseCode = "204", description = "Nenhum evento encontrado no calendário."),
+            @ApiResponse(responseCode = "500", description = "Erro ao acessar a API Calendar. Verifique as credenciais e a configuração da API."),
+            @ApiResponse(responseCode = "403", description = "Acesso negado. Verifique as permissões de autenticação.")
+    })
     @GetMapping("/{eventId}")
     public GoogleApi buscarEventoPorId(@PathVariable String eventId) throws GeneralSecurityException, IOException {
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
@@ -183,7 +207,28 @@ public class GoogleApiController {
         return googleApi;
     }
 
-
+    // CONFIGURAÇÃO SWAGGER atualizarEvento()
+    @Operation(summary = "Atualiza um evento pelo ID", description = """
+            Esse endpoint permite atualizar um evento da API Calendar:
+                       
+            Respostas:
+            
+            - 200: Requisição sucedida. Retorna a lista de eventos em JSON.
+            - 204: Nenhum evento encontrado no calendário.
+            - 500: Erro ao acessar a API Calendar. Verifique as credenciais e a configuração da API.
+            - 403: Acesso negado. Verifique as permissões de autenticação.
+            """)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = String.class)
+                    )
+            ),
+            @ApiResponse(responseCode = "204", description = "Nenhum evento encontrado no calendário."),
+            @ApiResponse(responseCode = "500", description = "Erro ao acessar a API Calendar. Verifique as credenciais e a configuração da API."),
+            @ApiResponse(responseCode = "403", description = "Acesso negado. Verifique as permissões de autenticação.")
+    })
     @PutMapping("/{eventId}")
     public String atualizarEvento(@PathVariable String eventId, @RequestBody GoogleApi eventRequest) throws GeneralSecurityException, IOException {
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
@@ -219,7 +264,6 @@ public class GoogleApiController {
         service.events().delete("primary", eventId).execute();
         return "Evento deletado com sucesso!";
     }
-
 
     private LocalDateTime dateTimeToLocalDateTime(DateTime dateTime) {
         return LocalDateTime.ofInstant(Instant.ofEpochMilli(dateTime.getValue()), ZoneId.systemDefault());
