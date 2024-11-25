@@ -17,6 +17,8 @@ import tech.code.codetech.dto.unidade.response.UnidadeResponseDto;
 import tech.code.codetech.mapper.UnidadeMapper;
 import tech.code.codetech.model.Unidade;
 import tech.code.codetech.service.UnidadeService;
+import tech.code.codetech.strategy.fila.FilaObj;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -28,6 +30,7 @@ public class UnidadeController {
 
     @Autowired
     private UnidadeService unidadeService;
+    private FilaObj<Unidade> filaDeUnidades = new FilaObj<>(10);
 
     //CONFIGURAÇÃO SWAGGGER listar()
     @Operation(summary = "Listar todas as unidades", description = """
@@ -65,6 +68,52 @@ public class UnidadeController {
         }
         return ResponseEntity.status(200).body(resposta);
     }
+
+    //CONFIGURAÇÃO SWAGGGER listarUnidadesOperacionais()
+    @Operation(summary = "Listar unidades fora da fila", description = """
+    Esse endpoint permite listar todas as unidades que não estão na fila.
+    
+    - Retorna uma lista de objetos representando cada unidade.
+    
+    Respostas:
+    
+    - 200: Requisição sucedida. Retorna a lista de unidades em JSON.
+    - 204: Nenhuma unidade encontrada fora da fila.
+    """)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK",
+                    content = @Content(
+                            mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = UnidadeResponseDto.class))
+                    )
+            ),
+            @ApiResponse(responseCode = "204", description = "Nenhuma unidade encontrada fora da fila",
+                    content = @Content()
+            )
+    })
+    @GetMapping("/operacionais")
+    public ResponseEntity<List<UnidadeResponseDto>> listarUnidadesOperacionais() {
+        List<Unidade> todasUnidades = unidadeService.findAll();
+        List<Unidade> unidadesNaFila = filaDeUnidades.getAll(); // Método getAll() deve ser implementado na FilaObj.
+
+        List<Unidade> unidadesForaDaFila = new ArrayList<>();
+        for (Unidade unidade : todasUnidades) {
+            if (!unidadesNaFila.contains(unidade)) {
+                unidadesForaDaFila.add(unidade);
+            }
+        }
+
+        if (unidadesForaDaFila.isEmpty()) {
+            return ResponseEntity.status(204).build();
+        }
+
+        List<UnidadeResponseDto> resposta = new ArrayList<>();
+        for (Unidade unidade : unidadesForaDaFila) {
+            resposta.add(UnidadeMapper.toResponseDto(unidade));
+        }
+        return ResponseEntity.status(200).body(resposta);
+    }
+
 
     //CONFIGURAÇÃO SWAGGER buscarPorId()
     @Operation(summary = "Buscar uma unidade", description = """
@@ -116,6 +165,31 @@ public class UnidadeController {
     })
     @PostMapping
     public ResponseEntity<UnidadeResponseDto> post(@RequestBody @Valid UnidadeRequestDto dto) {
+        Unidade unidade = unidadeService.save(UnidadeMapper.toModel(dto));
+        filaDeUnidades.insert(unidade);
+        return ResponseEntity.status(201).body(UnidadeMapper.toResponseDto(unidade));
+    }
+
+    //CONFIGURAÇÃO SWAGGER postFila()
+    @Operation(summary = "Criar uma unidade", description = """
+        Esse endpoint permite criar uma nova unidade no banco de dados.
+        
+        - Retorna a unidade criada.
+        
+        Respostas:
+        
+        - 201: Unidade criada com sucesso. Retorna a unidade em JSON.
+        """)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Created",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = UnidadeResponseDto.class)
+                    )
+            )
+    })
+    @PostMapping
+    public ResponseEntity<UnidadeResponseDto> postFila(@RequestBody @Valid UnidadeRequestDto dto) {
         Unidade unidade = unidadeService.save(UnidadeMapper.toModel(dto));
         return ResponseEntity.status(201).body(UnidadeMapper.toResponseDto(unidade));
     }
