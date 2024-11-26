@@ -1,4 +1,7 @@
-package tech.code.codetech.strategy.fila;
+package tech.code.codetech.api.controller.generico.fila;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class FilaObj<T> {
 
@@ -10,16 +13,16 @@ public class FilaObj<T> {
         this.fila = fila;
     }
 
-    public boolean isEmpty(){
+    public boolean isEmpty() {
         return tamanho == 0;
     }
 
-    public boolean isFull(){
+    public boolean isFull() {
         return tamanho == fila.length;
     }
 
-    public void insert(T elemento){
-        if(!isFull()){
+    public void insert(T elemento) {
+        if (!isFull()) {
             fila[tamanho++] = elemento;
         } else {
             throw new IllegalStateException("Lista cheia.");
@@ -27,13 +30,13 @@ public class FilaObj<T> {
     }
 
     //Primeiro elemento inserido na fila
-    public T peek(){
+    public T peek() {
         return fila[0];
     }
 
     //Primeiro elemento inserido na fila e remove
-    public T poll(){
-        if (!isEmpty()){
+    public T poll() {
+        if (!isEmpty()) {
 
             T elementoRemovido = fila[0];
 
@@ -58,6 +61,20 @@ public class FilaObj<T> {
                 System.out.print(fila[i] + " ");
             }
         }
+    }
+
+    public List<T> getAll() {
+
+        List<T> lista = new ArrayList<>();
+
+        for (int i = 0; i < tamanho; i++) {
+            lista.add(fila[i]);
+        }
+        return lista;
+    }
+
+    public int getTamanho() {
+        return tamanho;
     }
 
     public void setTamanho(int tamanho) {

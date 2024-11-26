@@ -1,4 +1,4 @@
-package tech.code.codetech.strategy.pilha;
+package tech.code.codetech.api.controller.generico.pilha;
 
 public class PilhaObj<T> {
 

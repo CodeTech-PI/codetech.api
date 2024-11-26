@@ -13,15 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import tech.code.codetech.dto.produto.response.ProdutoResponseDto;
 import tech.code.codetech.dto.usuarios.request.UsuariosRequestDto;
 import tech.code.codetech.dto.usuarios.response.UsuariosResponseDto;
-import tech.code.codetech.mapper.ProdutoMapper;
 import tech.code.codetech.mapper.UsuarioMapper;
-import tech.code.codetech.model.Produto;
 import tech.code.codetech.model.Usuario;
 import tech.code.codetech.service.UsuarioService;
-import tech.code.codetech.strategy.pilha.PilhaObj;
+import tech.code.codetech.api.controller.generico.pilha.PilhaObj;
 
 import java.util.ArrayList;
 import java.util.List;
