@@ -1,8 +1,11 @@
 package tech.code.codetech.api.controller.generico.fila;
 
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 public class FilaObj<T> {
 
     private int tamanho;
@@ -10,7 +13,7 @@ public class FilaObj<T> {
 
     public FilaObj(int capacidade) {
         this.tamanho = 0;
-        this.fila = fila;
+        this.fila = (T[]) new Object[capacidade];
     }
 
     public boolean isEmpty() {
@@ -63,18 +66,21 @@ public class FilaObj<T> {
         }
     }
 
-    public List<T> getAll() {
+    public void limpar() {
+        tamanho = 0;
 
+        for (int i = 0; i < fila.length; i++) {
+            fila[i] = null;
+        }
+    }
+
+    public List<T> getAll() {
         List<T> lista = new ArrayList<>();
 
         for (int i = 0; i < tamanho; i++) {
             lista.add(fila[i]);
         }
         return lista;
-    }
-
-    public int getTamanho() {
-        return tamanho;
     }
 
     public void setTamanho(int tamanho) {
