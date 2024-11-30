@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.annotation.PostConstruct;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -32,8 +33,21 @@ public class UnidadeController {
 
     @Autowired
     private UnidadeService unidadeService;
-//    private FilaObj<Unidade> filaDeUnidades = new FilaObj<>(unidadeService.quantidadeDeUnidades() + 1);
 
+    private FilaObj<Unidade> filaDeUnidadesInoperantes;
+
+    private FilaObj<Unidade> getFilaDeUnidadesInoperantes() {
+        if (filaDeUnidadesInoperantes == null) {
+            filaDeUnidadesInoperantes = new FilaObj<>(unidadeService.quantidadeDeUnidades());
+            for (Unidade unidade : unidadeService.findAll()) {
+                if (unidade.getStatus() == StatusUnidade.INOPERANTE) {
+                    filaDeUnidadesInoperantes.insert(unidade);
+                }
+            }
+        }
+        return filaDeUnidadesInoperantes;
+    }
+    
     //CONFIGURAÇÃO SWAGGGER listar()
     @Operation(summary = "Listar todas as unidades", description = """
             Esse endpoint permite listar todas as unidades cadastradas no banco de dados.
@@ -138,6 +152,7 @@ public class UnidadeController {
 
         for (Unidade unidade : unidadeService.findAll()) {
             if (unidade.getStatus() == StatusUnidade.INOPERANTE) {
+//                filaDeUnidadesInoperantes.insert(unidade);
                 retorno.add(UnidadeMapper.toResponseDto(unidade));
             }
         }
@@ -149,54 +164,61 @@ public class UnidadeController {
         return ResponseEntity.status(200).body(retorno);
     }
 
-//    // CONFIGURAÇÃO SWAGGER tornarUnidadeOperacional()
-//    @Operation(summary = "Torna a unidade operacional", description = """
-//            Esse endpoint permite ativar uma unidade.
-//
-//            - Retorna a unidade ativada.
-//
-//            Respostas:
-//
-//            - 200: Unidades ativadas com sucesso. Retorna as unidades ativadas em JSON.
-//            - 204: Nenhuma unidade removida, fila vazia.
-//            - 400: Requisição inválida, qtdOperacoes fora do intervalo.
-//            """)
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", description = "OK",
-//                    content = @Content(
-//                            mediaType = "application/json",
-//                            array = @ArraySchema(schema = @Schema(implementation = UnidadeResponseDto.class))
-//                    )
-//            ),
-//            @ApiResponse(responseCode = "204", description = "Nenhuma unidade removida, fila vazia.",
-//                    content = @Content()
-//            ),
-//            @ApiResponse(responseCode = "400", description = "Requisição inválida, qtdOperacoes fora do intervalo.",
-//                    content = @Content()
-//            )
-//    })
-//    @PostMapping("/tornar-operacional/{qtdOperacoes}")
-//    public ResponseEntity<List<UnidadeResponseDto>> tornarUnidadeOperacional(@PathVariable int qtdOperacoes) {
-//        if (qtdOperacoes <= 0) {
-//            return ResponseEntity.status(400).build();
-//        }
-//
-//        List<Unidade> unidadesOperacionais = unidadeService.findAllByStatus(StatusUnidade.OPERANTE).stream()
-//                .limit(qtdOperacoes)
-//                .collect(Collectors.toList());
-//
-//        if (unidadesOperacionais.isEmpty()) {
-//            return ResponseEntity.status(204).build();
-//        }
-//
-//        List<UnidadeResponseDto> unidadesResponseDto = unidadesOperacionais.stream()
-//                .map(UnidadeMapper::toResponseDto)
-//                .collect(Collectors.toList());
-//
-//        return ResponseEntity.status(200).body(unidadesResponseDto);
-//    }
+    // CONFIGURAÇÃO SWAGGER tornarUnidadeOperacional()
+    @Operation(summary = "Torna a unidade operacional", description = """
+            Esse endpoint permite ativar unidades de acordo com a quantidade exigida.
 
+            - Retorna a unidade ativada.
 
+            Respostas:
+
+            - 200: Unidades ativadas com sucesso. Retorna as unidades ativadas em JSON.
+            - 204: Nenhuma unidade removida, fila vazia.
+            - 400: Requisição inválida, qtdOperacoes fora do intervalo.
+            """)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK",
+                    content = @Content(
+                            mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = UnidadeResponseDto.class))
+                    )
+            ),
+            @ApiResponse(responseCode = "204", description = "Nenhuma unidade removida, fila vazia.",
+                    content = @Content()
+            ),
+            @ApiResponse(responseCode = "400", description = "Requisição inválida, qtdOperacoes fora do intervalo.",
+                    content = @Content()
+            )
+    })
+    @PostMapping("/tornar-operacional/{qtdOperacoes}")
+    public ResponseEntity<List<UnidadeResponseDto>> tornarUnidadeOperacional(@PathVariable int qtdOperacoes) {
+
+        FilaObj<Unidade> fila = getFilaDeUnidadesInoperantes();
+
+        if (qtdOperacoes <= 0 || qtdOperacoes > fila.getTamanho()) {
+            return ResponseEntity.status(400).build();
+        }
+
+        List<UnidadeResponseDto> unidadesAtivadas = new ArrayList<>();
+
+        for (int i = 0; i < qtdOperacoes; i++) {
+            if (fila.isEmpty()) {
+                break;
+            }
+
+            Unidade unidade = fila.poll();
+            unidade.setStatus(StatusUnidade.OPERANTE);
+            unidadeService.save(unidade);
+            filaDeUnidadesInoperantes.poll();
+            unidadesAtivadas.add(UnidadeMapper.toResponseDto(unidade));
+        }
+
+        if (unidadesAtivadas.isEmpty()) {
+            return ResponseEntity.status(204).build();
+        }
+
+        return ResponseEntity.status(200).body(unidadesAtivadas);
+    }
 
     //CONFIGURAÇÃO SWAGGER buscarPorId()
     @Operation(summary = "Buscar uma unidade", description = """
@@ -251,30 +273,6 @@ public class UnidadeController {
         Unidade unidade = unidadeService.save(UnidadeMapper.toModel(dto));
         return ResponseEntity.status(201).body(UnidadeMapper.toResponseDto(unidade));
     }
-
-//    //CONFIGURAÇÃO SWAGGER postFila()
-//    @Operation(summary = "Criar uma unidade", description = """
-//            Esse endpoint permite criar uma nova unidade no banco de dados.
-//
-//            - Retorna a unidade criada.
-//
-//            Respostas:
-//
-//            - 201: Unidade criada com sucesso. Retorna a unidade em JSON.
-//            """)
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "201", description = "Created",
-//                    content = @Content(
-//                            mediaType = "application/json",
-//                            schema = @Schema(implementation = UnidadeResponseDto.class)
-//                    )
-//            )
-//    })
-//    @PostMapping
-//    public ResponseEntity<UnidadeResponseDto> postFila(@RequestBody @Valid UnidadeRequestDto dto) {
-//        Unidade unidade = unidadeService.save(UnidadeMapper.toModel(dto));
-//        return ResponseEntity.status(201).body(UnidadeMapper.toResponseDto(unidade));
-//    }
 
     //CONFIGURAÇÃO SWAGGER atualizar()
     @Operation(summary = "Atualizar uma unidade", description = """

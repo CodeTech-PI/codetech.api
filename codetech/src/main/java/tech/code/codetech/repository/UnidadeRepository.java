@@ -15,6 +15,7 @@ public interface UnidadeRepository extends JpaRepository<Unidade, Integer> {
     @Query(value = "SELECT * FROM endereco WHERE status_unidade = :statusUnidade", nativeQuery = true)
     List<Unidade> findAllByStatusUnidade(@Param("statusUnidade") StatusUnidade statusUnidade);
 
-    @Query("SELECT COUNT(u.id) FROM Unidade u")
+    @Query("SELECT COUNT(u) FROM Unidade u WHERE u.status = 'INOPERANTE'")
     int quantidadeDeUnidades();
+
 }
