@@ -171,4 +171,17 @@ public class ListaProdutoController {
         listaProdutoService.deleteAll(listaProdutoDeleteRequestDto.getProdutosIds());
         return ResponseEntity.status(204).build();
     }
+
+
+    @GetMapping("/buscar-lista/{idAgendamento}")
+    public ResponseEntity<List<ListaProdutoResponseDto>> buscarListaDoAgendamento(@PathVariable int idAgendamento){
+        List<ListaProduto> listaDeProdutosDoAgendamento = listaProdutoService.buscarListaProdutosPeloAgendamento(idAgendamento);
+
+        if(listaDeProdutosDoAgendamento.isEmpty()){
+            return ResponseEntity.status(204).build();
+        }
+
+        return ResponseEntity.status(200).body(ListaProdutoMapper.toResponseDto(listaDeProdutosDoAgendamento));
+
+    }
 }

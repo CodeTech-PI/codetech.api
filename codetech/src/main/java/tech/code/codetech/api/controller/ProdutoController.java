@@ -11,10 +11,12 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import tech.code.codetech.dto.lista.response.ListaProdutoResponseDto;
 import tech.code.codetech.dto.produto.request.ProdutoRequestDto;
 import tech.code.codetech.dto.produto.response.ProdutoResponseDto;
 import tech.code.codetech.mapper.ProdutoMapper;
 import tech.code.codetech.model.Produto;
+import tech.code.codetech.service.ListaProdutoService;
 import tech.code.codetech.service.ProdutoService;
 
 import java.util.ArrayList;
@@ -31,15 +33,15 @@ public class ProdutoController {
 
     // CONFIGURAÇÃO SWAGGER listar()
     @Operation(summary = "Listar todos os produtos", description = """
-        Esse endpoint permite a listagem de todos os produtos cadastrados no estoque:
-        
-        - Retorna uma lista de objetos representando cada produto.
-        
-        Respostas:
-        
-        - 200: Requisição sucedida. Retorna a lista de produtos em JSON.
-        - 204: Nenhum produto encontrado.
-        """)
+            Esse endpoint permite a listagem de todos os produtos cadastrados no estoque:
+            
+            - Retorna uma lista de objetos representando cada produto.
+            
+            Respostas:
+            
+            - 200: Requisição sucedida. Retorna a lista de produtos em JSON.
+            - 204: Nenhum produto encontrado.
+            """)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Listar todos os produtos",
                     content = @Content(
@@ -67,15 +69,15 @@ public class ProdutoController {
 
     // CONFIGURAÇÃO SWAGGER encontrarPorId()
     @Operation(summary = "Buscar produto por id", description = """
-        Esse endpoint permite retornar um produto específico pelo seu ID.
-        
-        - Retorna um objeto representando o produto se encontrado.
-        
-        Respostas:
-        
-        - 200: Requisição sucedida. Retorna o produto em JSON.
-        - 404: Produto não encontrado, ID fornecido inválido.
-        """)
+            Esse endpoint permite retornar um produto específico pelo seu ID.
+            
+            - Retorna um objeto representando o produto se encontrado.
+            
+            Respostas:
+            
+            - 200: Requisição sucedida. Retorna o produto em JSON.
+            - 404: Produto não encontrado, ID fornecido inválido.
+            """)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK",
                     content = @Content(
@@ -97,14 +99,14 @@ public class ProdutoController {
 
     // CONFIGURAÇÃO SWAGGER post()
     @Operation(summary = "Criar um produto", description = """
-        Esse endpoint permite criar um novo produto no sistema.
-        
-        - Requer um objeto ProdutoRequestDto no corpo da requisição.
-        
-        Respostas:
-        
-        - 201: Produto criado com sucesso. Retorna o objeto do produto criado em JSON.
-        """)
+            Esse endpoint permite criar um novo produto no sistema.
+            
+            - Requer um objeto ProdutoRequestDto no corpo da requisição.
+            
+            Respostas:
+            
+            - 201: Produto criado com sucesso. Retorna o objeto do produto criado em JSON.
+            """)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Created",
                     content = @Content(
@@ -121,16 +123,16 @@ public class ProdutoController {
 
     // CONFIGURAÇÃO SWAGGER atualizar()
     @Operation(summary = "Atualizar um produto", description = """
-        Esse endpoint permite atualizar um produto específico pelo seu ID.
-        
-        - Requer um objeto ProdutoRequestDto no corpo da requisição para os novos dados do produto.
-        
-        Respostas:
-        
-        - 200: Produto atualizado com sucesso. Retorna o objeto do produto atualizado em JSON.
-        - 400: Solicitação inválida.
-        - 404: Produto não encontrado.
-        """)
+            Esse endpoint permite atualizar um produto específico pelo seu ID.
+            
+            - Requer um objeto ProdutoRequestDto no corpo da requisição para os novos dados do produto.
+            
+            Respostas:
+            
+            - 200: Produto atualizado com sucesso. Retorna o objeto do produto atualizado em JSON.
+            - 400: Solicitação inválida.
+            - 404: Produto não encontrado.
+            """)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK",
                     content = @Content(
@@ -160,15 +162,15 @@ public class ProdutoController {
 
     // CONFIGURAÇÃO SWAGGER deletar()
     @Operation(summary = "Deletar um produto", description = """
-        Esse endpoint permite deletar um produto específico pelo seu ID.
-        
-        - Requer o ID do produto a ser deletado como parâmetro na URL.
-        
-        Respostas:
-        
-        - 204: Produto deletado com sucesso. Não retorna conteúdo.
-        - 404: Produto não encontrado.
-        """)
+            Esse endpoint permite deletar um produto específico pelo seu ID.
+            
+            - Requer o ID do produto a ser deletado como parâmetro na URL.
+            
+            Respostas:
+            
+            - 204: Produto deletado com sucesso. Não retorna conteúdo.
+            - 404: Produto não encontrado.
+            """)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "No Content",
                     content = @Content()
@@ -190,15 +192,15 @@ public class ProdutoController {
 
     // CONFIGURAÇÃO SWAGGER exportarProdutosParaCsv()
     @Operation(summary = "Exportar arquivos dos produtos", description = """
-        Esse endpoint permite exportar todos os produtos cadastrados no estoque para um arquivo CSV.
-        
-        - Retorna uma mensagem de sucesso ao concluir a exportação.
-        
-        Respostas:
-        
-        - 200: Exportação realizada com sucesso. Retorna uma mensagem indicando que os produtos foram exportados.
-        - 204: Nenhum produto encontrado para exportação.
-        """)
+            Esse endpoint permite exportar todos os produtos cadastrados no estoque para um arquivo CSV.
+            
+            - Retorna uma mensagem de sucesso ao concluir a exportação.
+            
+            Respostas:
+            
+            - 200: Exportação realizada com sucesso. Retorna uma mensagem indicando que os produtos foram exportados.
+            - 204: Nenhum produto encontrado para exportação.
+            """)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Ok. Exportação realizada com sucesso.",
                     content = @Content(
@@ -220,4 +222,5 @@ public class ProdutoController {
         productService.exportarProdutosParaCsv();
         return ResponseEntity.ok("Produtos exportados com sucesso para o arquivo produtos.csv");
     }
+
 }
