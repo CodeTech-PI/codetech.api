@@ -172,7 +172,22 @@ public class ListaProdutoController {
         return ResponseEntity.status(204).build();
     }
 
-
+    @Operation(summary = "Buscar lista de produtos pelo ID do agendamento", description = """
+            Esse endpoint permite buscar todos os produtos relacionados a um agendamento específico.
+            
+            - Retorna uma lista de produtos do agendamento especificado.
+            
+            Respostas:
+            
+            - 200: Lista de produtos retornada com sucesso.
+            - 204: Nenhum produto encontrado para o agendamento.
+            """)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lista de produtos retornada com sucesso."),
+            @ApiResponse(responseCode = "204", description = "Nenhum produto encontrado para o agendamento."),
+            @ApiResponse(responseCode = "400", description = "Erro na requisição. Possivelmente parâmetros inválidos."),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor.")
+    })
     @GetMapping("/buscar-lista/{idAgendamento}")
     public ResponseEntity<List<ListaProdutoResponseDto>> buscarListaDoAgendamento(@PathVariable int idAgendamento){
         List<ListaProduto> listaDeProdutosDoAgendamento = listaProdutoService.buscarListaProdutosPeloAgendamento(idAgendamento);
