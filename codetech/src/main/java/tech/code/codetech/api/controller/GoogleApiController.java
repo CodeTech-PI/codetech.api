@@ -88,7 +88,7 @@ public class GoogleApiController {
 
         String calendarId = "primary";
         event = service.events().insert(calendarId, event).execute();
-        return "Event created: " + event.getHtmlLink() + "Id: " + event.getId();
+        return "Event created: " + event.getHtmlLink() + "\n Id: " + event.getId();
     }
 
     // CONFIGURAÇÃO SWAGGER listEvents()
@@ -134,14 +134,22 @@ public class GoogleApiController {
         if (items != null) {
             bubbleSortEventsByDescription(items);
         }
+
         List<GoogleApi> listaItems = new ArrayList<>();
         for (Event event : items) {
             GoogleApi googleApi = new GoogleApi();
             googleApi.setSummary(event.getSummary());
             googleApi.setDescription(event.getDescription());
 
-            // Convertendo o ID de String para UUID e atribuindo
-            googleApi.setId(UUID.fromString(event.getId()));
+            // Verificar se o ID é um UUID válido
+            try {
+                UUID uuid = UUID.fromString(event.getId());
+                googleApi.setId(uuid);
+            } catch (IllegalArgumentException e) {
+                // Caso o ID não seja um UUID válido, você pode lidar com isso de forma diferente
+                // Por exemplo, armazene o ID como string ou use um UUID fictício
+                googleApi.setId(UUID.randomUUID());  // Ou algum outro valor padrão
+            }
 
             DateTime startDateTime = event.getStart().getDateTime();
             DateTime endDateTime = event.getEnd().getDateTime();
@@ -158,6 +166,7 @@ public class GoogleApiController {
         }
         return listaItems;
     }
+
 
     // CONFIGURAÇÃO SWAGGER buscarEventoPorId()
     @Operation(summary = "Buscar um evento pelo ID", description = """
