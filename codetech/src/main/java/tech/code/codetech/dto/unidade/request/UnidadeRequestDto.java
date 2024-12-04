@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Data;
+import tech.code.codetech.api.controller.generico.StatusUnidade;
 
 @Data
 @Builder
@@ -33,4 +34,14 @@ public class UnidadeRequestDto {
 
     @NotNull
     private Integer num;
+
+    @NotNull
+    private StatusUnidade status;
+
+    public StatusUnidade getStatus() {
+        if (status == null) {
+            return StatusUnidade.INOPERANTE;
+        }
+        return status;
+    }
 }

@@ -2,6 +2,7 @@ package tech.code.codetech.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import tech.code.codetech.api.controller.generico.StatusUnidade;
 
 @Getter
 @Setter
@@ -23,4 +24,22 @@ public class Unidade {
     private String complemento;
     private Integer num;
 
+    @Column(name = "status_unidade")
+    @Enumerated(EnumType.STRING)  // Transforma em string
+    private StatusUnidade status = StatusUnidade.INOPERANTE;
+
+    @Override
+    public String toString() {
+        return "Unidade { " +
+                "id=" + id + ", " +
+                "cep='" + cep + "', " +
+                "logradouro='" + logradouro + "', " +
+                "bairro='" + bairro + "', " +
+                "cidade='" + cidade + "', " +
+                "estado='" + estado + "', " +
+                "complemento='" + complemento + "', " +
+                "num=" + num +
+                "status=" + status +
+                " }";
+    }
 }
