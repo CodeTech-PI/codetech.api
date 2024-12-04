@@ -1,54 +1,29 @@
 package tech.code.codetech.model;
 
 import com.google.api.client.util.DateTime;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
+@Getter
+@Setter
 public class GoogleApi {
 
+    private UUID id;
     private String summary;
-//    private String location;
-
-
     private String description;
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
 
-    public String getSummary() {
-        return summary;
-    }
-
-    public void setSummary(String summary) {
-        this.summary = summary;
-    }
-
-//    public String getLocation() {
-//        return location;
-//    }
-
-//    public void setLocation(String location) {
-//        this.location = location;
-//    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public LocalDateTime getStartDateTime() {
-        return startDateTime;
+    public GoogleApi() {
+        this.id = UUID.randomUUID(); // Gera um UUID único automaticamente
     }
 
     public void setStartDateTime(LocalDateTime startDateTime) {
         this.startDateTime = startDateTime;
-    }
-
-    public LocalDateTime getEndDateTime() {
-        return endDateTime;
     }
 
     public void setEndDateTime(LocalDateTime endDateTime) {

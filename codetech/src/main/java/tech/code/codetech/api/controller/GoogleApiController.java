@@ -30,6 +30,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Tag(name = "GoogleApi")
 @RestController
@@ -87,7 +88,7 @@ public class GoogleApiController {
 
         String calendarId = "primary";
         event = service.events().insert(calendarId, event).execute();
-        return "Event created: " + event.getHtmlLink();
+        return "Event created: " + event.getHtmlLink() + "Id: " + event.getId();
     }
 
     // CONFIGURAÇÃO SWAGGER listEvents()
@@ -138,7 +139,9 @@ public class GoogleApiController {
             GoogleApi googleApi = new GoogleApi();
             googleApi.setSummary(event.getSummary());
             googleApi.setDescription(event.getDescription());
-//            googleApi.setLocation(event.getLocation());
+
+            // Convertendo o ID de String para UUID e atribuindo
+            googleApi.setId(UUID.fromString(event.getId()));
 
             DateTime startDateTime = event.getStart().getDateTime();
             DateTime endDateTime = event.getEnd().getDateTime();
@@ -181,17 +184,26 @@ public class GoogleApiController {
             @ApiResponse(responseCode = "403", description = "Acesso negado. Verifique as permissões de autenticação.")
     })
     @GetMapping("/{eventId}")
-    public GoogleApi buscarEventoPorId(@PathVariable String eventId) throws GeneralSecurityException, IOException {
+    public GoogleApi buscarEventoPorId(@PathVariable UUID eventId) throws GeneralSecurityException, IOException {
+
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+
         Calendar service = new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, googleApiAuthorizationService.getCredentials(HTTP_TRANSPORT))
                 .setApplicationName("CodeTech")
                 .build();
 
-        Event event = service.events().get("primary", eventId).execute();
+        // Converte o UUID para String para usar na API do Google
+        String eventIdString = eventId.toString();
+
+        // Obtém o evento atual usando o eventId (convertido para String)
+        Event event = service.events().get("primary", eventIdString).execute();
 
         GoogleApi googleApi = new GoogleApi();
         googleApi.setSummary(event.getSummary());
         googleApi.setDescription(event.getDescription());
+
+        // Define o ID do evento como UUID no GoogleApi
+        googleApi.setId(eventId);
 
         // Converter as datas para LocalDateTime
         DateTime startDateTime = event.getStart().getDateTime();
@@ -207,10 +219,11 @@ public class GoogleApiController {
         return googleApi;
     }
 
+
     // CONFIGURAÇÃO SWAGGER atualizarEvento()
     @Operation(summary = "Atualiza um evento pelo ID", description = """
             Esse endpoint permite atualizar um evento da API Calendar:
-                       
+            
             Respostas:
             
             - 200: Requisição sucedida. Retorna a lista de eventos em JSON.
@@ -230,13 +243,17 @@ public class GoogleApiController {
             @ApiResponse(responseCode = "403", description = "Acesso negado. Verifique as permissões de autenticação.")
     })
     @PutMapping("/{eventId}")
-    public String atualizarEvento(@PathVariable String eventId, @RequestBody GoogleApi eventRequest) throws GeneralSecurityException, IOException {
+    public String atualizarEvento(@PathVariable UUID eventId, @RequestBody GoogleApi eventRequest) throws GeneralSecurityException, IOException {
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
         Calendar service = new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, googleApiAuthorizationService.getCredentials(HTTP_TRANSPORT))
                 .setApplicationName("CodeTech")
                 .build();
 
-        Event event = service.events().get("primary", eventId).execute();
+        // Converte o UUID para String para usar na API do Google
+        String eventIdString = eventId.toString();
+
+        // Obtém o evento atual usando o eventId (convertido para String)
+        Event event = service.events().get("primary", eventIdString).execute();
         event.setSummary(eventRequest.getSummary());
         event.setDescription(eventRequest.getDescription());
 
@@ -250,20 +267,30 @@ public class GoogleApiController {
         event.setStart(new EventDateTime().setDateTime(startGoogleDateTime));
         event.setEnd(new EventDateTime().setDateTime(endGoogleDateTime));
 
-        event = service.events().update("primary", eventId, event).execute();
-        return "Evento atualizado: " + event.getHtmlLink();
+        // Atualiza o evento
+        event = service.events().update("primary", eventIdString, event).execute();
+
+        return "Evento atualizado: " + event.getHtmlLink() + "Id: " + event.getId();
     }
 
+
     @DeleteMapping("/{eventId}")
-    public String deletarEvento(@PathVariable String eventId) throws GeneralSecurityException, IOException {
+    public String deletarEvento(@PathVariable UUID eventId) throws GeneralSecurityException, IOException {
+
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
         Calendar service = new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, googleApiAuthorizationService.getCredentials(HTTP_TRANSPORT))
                 .setApplicationName("CodeTech")
                 .build();
 
-        service.events().delete("primary", eventId).execute();
+        // Converte UUID para String para usar na API do Google
+        String eventIdString = eventId.toString();
+
+        // Deleta o evento no Google Calendar
+        service.events().delete("primary", eventIdString).execute();
+
         return "Evento deletado com sucesso!";
     }
+
 
     private LocalDateTime dateTimeToLocalDateTime(DateTime dateTime) {
         return LocalDateTime.ofInstant(Instant.ofEpochMilli(dateTime.getValue()), ZoneId.systemDefault());
