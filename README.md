@@ -50,6 +50,7 @@ Para executar este projeto, é necessário ter instalado:
 - Java 17 ou superior.
 - Maven para gerenciar as dependências.
 - Banco de dados relacional (MySQL).
+- IDE (opcional): IntelliJ IDEA, Eclipse, VS Code ou outra de sua preferência.
 - Ferramenta de teste para APIs (Postman, Insomnia, etc.).
 
 ---
