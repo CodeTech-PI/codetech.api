@@ -1,11 +1,17 @@
 # codetech.api
 
+## Equipe
+Este projeto foi desenvolvido em equipe por **6 integrantes**: **Caio Florentino, Gabriel Gonçalves, Gabriela Severino, Hosana Silvino, Nathalia Florêncio e Samarah Costa**. O sistema foi criado em parceria com a beneficiária final, que receberá este software como **doação para gestão de seu estúdio de tatuagem**.
+
 ## Descrição do Projeto
+
 **CodeTech API** é um sistema backend projetado para atender as necessidades de pequenos estúdios de tatuagem. A aplicação tem como objetivo:
 - Facilitar a **gestão de controle de estoque** de insumos e materiais utilizados no dia a dia.
 - Oferecer ferramentas para **acompanhamento e análise de faturamento**, proporcionando maior eficiência e organização, sendo utilizado dashboard e gráficos.
 
 O sistema foi desenvolvido utilizando boas práticas de desenvolvimento, como o uso de **DTOs (Data Transfer Objects)** para garantir uma comunicação eficiente entre as camadas da aplicação.
+
+
 
 ---
 
