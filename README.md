@@ -12,12 +12,12 @@ O sistema foi desenvolvido utilizando boas práticas de desenvolvimento, como o 
 ## Tecnologias Utilizadas
 O projeto foi desenvolvido utilizando as seguintes tecnologias:
 
-- ![Java](https://img.icons8.com/color/48/000000/java-coffee-cup-logo--v1.png) **Java**: Linguagem principal para o desenvolvimento da aplicação.
-- ![Spring Boot](https://img.icons8.com/color/48/000000/spring-logo.png) **Spring Boot**: Framework utilizado para simplificar a criação de aplicações robustas e escaláveis.
-- ![Swagger](https://img.icons8.com/color/48/000000/api-settings.png) **Swagger API**: Ferramenta de documentação e teste das rotas de API.
-- ![Mockito](https://img.icons8.com/ios-filled/50/007ACC/test-tube.png) **Mockito** e **Mock**: Frameworks utilizados para a criação de testes unitários e simulações.
+- <img src="https://img.icons8.com/color/48/000000/java-coffee-cup-logo--v1.png" width="22"/> **Java**: Linguagem principal para o desenvolvimento da aplicação.
+- <img src="https://img.icons8.com/color/48/000000/spring-logo.png" width="22"/> **Spring Boot**: Framework utilizado para simplificar a criação de aplicações robustas e escaláveis.
+- <img src="https://img.icons8.com/color/48/000000/api-settings.png" width="22"/> **Swagger API**: Ferramenta de documentação e teste das rotas de API.
+- <img src="https://img.icons8.com/ios-filled/50/007ACC/test-tube.png" width="22"/> **Mockito** e **Mock**: Frameworks utilizados para a criação de testes unitários e simulações.
 - 📦 **DTO (Data Transfer Object)**: Padrão utilizado para transferir dados entre as camadas de forma eficiente e organizada.
-- ![MySQL](https://img.icons8.com/color/48/000000/mysql-logo.png) **MySQL**: Banco de dados relacional utilizado para armazenar as informações do sistema.
+-  <img src="https://img.icons8.com/color/48/000000/mysql-logo.png" width="22"/> **MySQL**: Banco de dados relacional utilizado para armazenar as informações do sistema.
 
 ---
 
