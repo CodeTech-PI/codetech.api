@@ -56,10 +56,14 @@ Para executar este projeto, é necessário ter instalado:
 ---
 
 ## Como Rodar o Projeto
-1. Clone o repositório:
+1. Clone o repositório de acordo com algumas de suas preferências: HTTP, SSH:
    ```bash
    
-   git clone https://github.com/CodeTech-PI/codetech.api.git 
+   https://github.com/CodeTech-PI/codetech.api.git
+
+   git@github.com:CodeTech-PI/codetech.api.git
+
+   gh repo clone CodeTech-PI/codetech.api 
   
 
 
