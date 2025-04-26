@@ -163,7 +163,7 @@ public class UsuarioController {
         return ResponseEntity.status(200).body(UsuarioMapper.toResponseDto(usuarioExists));
     }
 
-    //CONFIGURAÇÂO SWAGGER deletar()
+    //CONFIGURAÇÂO SWAGGER desfazer-cadastro()
     @Operation(summary = "Deletar um usuário", description = """
         Esse endpoint permite deletar um usuário pelo ID.
         
@@ -178,17 +178,6 @@ public class UsuarioController {
             ),
             @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
     })
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable Integer id) {
-        if (Objects.isNull(id) || id < 0) {
-            ResponseEntity.status(404).build();
-        }
-        boolean isDeleted = usuarioService.delete(id);
-        if (!isDeleted) {
-            return ResponseEntity.status(404).build();
-        }
-        return ResponseEntity.status(204).build();
-    }
 
     @DeleteMapping("/desfazer-cadastro")
     public ResponseEntity<String> desfazerCadastro() {
@@ -204,5 +193,36 @@ public class UsuarioController {
             return ResponseEntity.ok("Cadastro desfeito com sucesso!");
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Nenhum cadastro para desfazer.");
+    }
+
+    //CONFIGURAÇÂO SWAGGER deletar()
+    @Operation(summary = "Deletar um usuário", description = """
+        Esse endpoint permite deletar um usuário pelo ID.
+
+        Respostas:
+
+        - 204: Usuário deletado com sucesso. Não retorna conteúdo.
+        - 404: Usuário não encontrado, dados inválidos.
+        """)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "OK",
+                    content = @Content()
+            ),
+            @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
+    })
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletar(@PathVariable Integer id) {
+        if (Objects.isNull(id) || id <= 0) {
+            return ResponseEntity.status(404).build();
+        }
+
+        Usuario usuario = usuarioService.findById(id);
+
+        if (usuario == null) {
+            return ResponseEntity.status(404).build();
+        }
+
+        usuarioService.delete(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
