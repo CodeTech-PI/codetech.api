@@ -12,8 +12,9 @@ public class CorsController implements WebMvcConfigurer  {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**") // Permitir todas as rotas
                 .allowedOrigins("http://localhost:3000") // Permitir requisições apenas dessa origem
-                .allowedOrigins("http://18.215.140.118")
-                .allowedOriginPatterns("http://18.215.140.118/*")
+                .allowedOrigins("http://3.219.248.230:3000")
+                .allowedOriginPatterns("http://3.219.248.230:3000/*")
+                .allowedOriginPatterns("http://3.219.248.230/*")
                 .allowedOriginPatterns("http://10.0.0.*")
                 .allowedOriginPatterns("http://10.0.1.*")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Métodos permitidos
